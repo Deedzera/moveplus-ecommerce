@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Move Plus — Painel de Administração</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body>
+    <!-- ======== SIDEBAR ======== -->
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="sidebar__header">
+        <div class="sidebar__logo">Move <span>Plus</span></div>
+        <div class="sidebar__subtitle">Painel Admin</div>
+      </div>
+
+      <nav class="sidebar__nav">
+        <div class="sidebar__section-label">Principal</div>
+        <a href="#" class="sidebar__link active" data-section="dashboard">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar__link" data-section="orders">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span>Encomendas</span>
+          <span class="sidebar__badge">12</span>
+        </a>
+
+        <div class="sidebar__section-label">Catálogo</div>
+        <a href="#" class="sidebar__link" data-section="products">
+          <i class="fa-solid fa-box-open"></i>
+          <span>Produtos</span>
+        </a>
+        <a href="#" class="sidebar__link" data-section="categories">
+          <i class="fa-solid fa-tags"></i>
+          <span>Categorias</span>
+        </a>
+
+        <div class="sidebar__section-label">Clientes</div>
+        <a href="#" class="sidebar__link" data-section="customers">
+          <i class="fa-solid fa-users"></i>
+          <span>Clientes</span>
+        </a>
+        <a href="#" class="sidebar__link" data-section="messages">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Mensagens</span>
+        </a>
+
+        <div class="sidebar__section-label">Configurações</div>
+        <a href="#" class="sidebar__link" data-section="settings">
+          <i class="fa-solid fa-gear"></i>
+          <span>Definições</span>
+        </a>
+        <a href="../index.html" class="sidebar__link sidebar__link--exit">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Ver Site</span>
+        </a>
+      </nav>
+
+      <div class="sidebar__user">
+        <div class="sidebar__user-avatar">A</div>
+        <div class="sidebar__user-info">
+          <div class="sidebar__user-name">Administrador</div>
+          <div class="sidebar__user-role">Super Admin</div>
+        </div>
+        <button class="sidebar__logout" title="Sair">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ======== MAIN CONTENT ======== -->
+    <div class="admin-main" id="adminMain">
+      <!-- Top Bar -->
+      <header class="admin-topbar">
+        <div class="topbar__left">
+          <button class="topbar__menu-btn" id="sidebarToggle">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="topbar__breadcrumb">
+            <span id="topbarTitle">Dashboard</span>
+          </div>
+        </div>
+        <div class="topbar__right">
+          <div class="topbar__search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Pesquisar..." />
+          </div>
+          <button class="topbar__icon-btn" title="Notificações">
+            <i class="fa-solid fa-bell"></i>
+            <span class="topbar__notif-dot"></span>
+          </button>
+          <button
+            class="topbar__icon-btn"
+            title="Modo escuro"
+            id="adminThemeToggle"
+          >
+            <i class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- ===== CONTENT SECTIONS ===== -->
+      <div class="admin-content">
+        <!-- ===== DASHBOARD ===== -->
+        <section class="admin-section active" id="section-dashboard">
+          <div class="admin-section__header">
+            <h1 class="admin-section__title">Dashboard</h1>
+            <p class="admin-section__desc">
+              Bem-vindo ao painel de controlo da Move Plus.
+            </p>
+          </div>
+
+          <!-- KPI Cards -->
+          <div class="kpi-grid">
+            <div class="kpi-card kpi-card--gold">
+              <div class="kpi-card__icon">
+                <i class="fa-solid fa-bag-shopping"></i>
+              </div>
+              <div class="kpi-card__info">
+                <div class="kpi-card__value" id="kpiOrders">—</div>
+                <div class="kpi-card__label">Encomendas este mês</div>
+                <div class="kpi-card__change" id="kpiOrdersChange">
+                  <i class="fa-solid fa-minus"></i> 0% vs mês anterior
+                </div>
+              </div>
+            </div>
+            <div class="kpi-card kpi-card--green">
+              <div class="kpi-card__icon">
+                <i class="fa-solid fa-kip-sign"></i>
+              </div>
+              <div class="kpi-card__info">
+                <div class="kpi-card__value" id="kpiRevenue">—</div>
+                <div class="kpi-card__label">Receita este mês</div>
+                <div class="kpi-card__change" id="kpiRevenueChange">
+                  <i class="fa-solid fa-minus"></i> 0% vs mês anterior
+                </div>
+              </div>
+            </div>
+            <div class="kpi-card kpi-card--blue">
+              <div class="kpi-card__icon">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div class="kpi-card__info">
+                <div class="kpi-card__value" id="kpiCustomers">—</div>
+                <div class="kpi-card__label">Clientes activos</div>
+                <div class="kpi-card__change" id="kpiCustomersChange">
+                  <i class="fa-solid fa-minus"></i> 0% vs mês anterior
+                </div>
+              </div>
+            </div>
+            <div class="kpi-card kpi-card--red">
+              <div class="kpi-card__icon">
+                <i class="fa-solid fa-box-open"></i>
+              </div>
+              <div class="kpi-card__info">
+                <div class="kpi-card__value" id="kpiOutOfStock">—</div>
+                <div class="kpi-card__label">Produtos sem stock</div>
+                <div class="kpi-card__change negative">
+                  <i class="fa-solid fa-triangle-exclamation"></i> Atenção
+                  requerida
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Orders + Top Products -->
+          <div class="dashboard-grid">
+            <!-- Recent Orders -->
+            <div class="admin-card">
+              <div class="admin-card__header">
+                <h3 class="admin-card__title">Encomendas Recentes</h3>
+                <button class="btn-link" data-goto="orders">Ver todas</button>
+              </div>
+              <div class="table-wrap">
+                <table class="admin-table">
+                  <thead>
+                    <tr>
+                      <th>#ID</th>
+                      <th>Cliente</th>
+                      <th>Total</th>
+                      <th>Estado</th>
+                      <th>Data</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentOrdersBody">
+                    <!-- JS injected -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Top Products -->
+            <div class="admin-card">
+              <div class="admin-card__header">
+                <h3 class="admin-card__title">Top Produtos</h3>
+                <button class="btn-link" data-goto="products">Ver todos</button>
+              </div>
+              <div class="top-products-list" id="topProductsList">
+                <!-- JS injected -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity chart placeholder -->
+          <div class="admin-card chart-card">
+            <div class="admin-card__header">
+              <h3 class="admin-card__title">Vendas — Últimos 7 dias</h3>
+            </div>
+            <div class="chart-bars" id="chartBars">
+              <!-- JS generated -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== ENCOMENDAS ===== -->
+        <section class="admin-section" id="section-orders">
+          <div class="admin-section__header">
+            <h1 class="admin-section__title">Encomendas</h1>
+            <div class="admin-section__actions">
+              <select class="admin-select" id="orderStatusFilter">
+                <option value="">Todos os estados</option>
+                <option value="pendente">Pendente</option>
+                <option value="processando">A processar</option>
+                <option value="enviado">Enviado</option>
+                <option value="entregue">Entregue</option>
+                <option value="cancelado">Cancelado</option>
+              </select>
+              <button
+                class="btn-admin btn-admin--gold"
+                onclick="exportOrders()"
+              >
+                <i class="fa-solid fa-download"></i> Exportar
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>#ID</th>
+                    <th>Cliente</th>
+                    <th>Contacto</th>
+                    <th>Produtos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                  <!-- JS injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== PRODUTOS ===== -->
+        <section class="admin-section" id="section-products">
+          <div class="admin-section__header">
+            <h1 class="admin-section__title">Produtos</h1>
+            <div class="admin-section__actions">
+              <div class="search-inline">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  type="text"
+                  placeholder="Pesquisar produto..."
+                  id="productSearch"
+                  oninput="filterProducts()"
+                />
+              </div>
+              <select
+                class="admin-select"
+                id="productCatFilter"
+                onchange="filterProducts()"
+              >
+                <option value="">Todas as categorias</option>
+                <!-- Populado dinamicamente via JS -->
+              </select>
+              <button
+                class="btn-admin btn-admin--gold"
+                onclick="openProductModal()"
+              >
+                <i class="fa-solid fa-plus"></i> Novo Produto
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Imagem</th>
+                    <th>Nome</th>
+                    <th>Categoria</th>
+                    <th>Preço</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="productsTableBody">
+                  <!-- JS injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== CATEGORIAS ===== -->
+        <section class="admin-section" id="section-categories">
+          <div class="admin-section__header">
+            <h1 class="admin-section__title">Categorias</h1>
+            <div class="admin-section__actions">
+              <button
+                class="btn-admin btn-admin--gold"
+                onclick="openCategoryModal()"
+              >
+                <i class="fa-solid fa-plus"></i> Nova Categoria
+              </button>
+            </div>
+          </div>
+
+          <div class="categories-admin-grid" id="categoriesGrid">
+            <!-- JS injected -->
+          </div>
+        </section>
+
+        <!-- ===== CLIENTES ===== -->
+        <section class="admin-section" id="section-customers">
+          <div class="admin-section__header">
+            <h1 class="admin-section__title">Clientes</h1>
+            <div class="admin-section__actions">
+              <div class="search-inline">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  type="text"
+                  placeholder="Pesquisar cliente..."
+                  id="customerSearch"
+                  oninput="filterCustomers()"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="admin-card">
+            <div class="table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Avatar</th>
+                    <th>Nome</th>
+                    <th>Contacto</th>
+                    <th>Encomendas</th>
+                    <th>Total Gasto</th>
+                    <th>Membro desde</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                  <!-- JS injected -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== MENSAGENS ===== -->
+        <section class="admin-section" id="section-messages">
+          <div class="admin-section__header">
+            <h1 class="admin-section__title">Mensagens WhatsApp</h1>
+          </div>
+
+          <div class="messages-list" id="messagesList">
+            <!-- JS injected -->
+          </div>
+        </section>
+
+        <!-- ===== DEFINIÇÕES ===== -->
+        <section class="admin-section" id="section-settings">
+          <div class="admin-section__header">
+            <h1 class="admin-section__title">Definições do Site</h1>
+          </div>
+
+          <div class="settings-grid">
+            <div class="admin-card settings-card">
+              <div class="admin-card__header">
+                <h3 class="admin-card__title">
+                  <i class="fa-solid fa-store"></i> Informações da Loja
+                </h3>
+              </div>
+              <form class="settings-form" onsubmit="saveSettings(event)">
+                <div class="form-group">
+                  <label>Nome da Loja</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="sName"
+                    value="A carregar..."
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Slogan</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="sSlogan"
+                    value="A carregar..."
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Email de Contacto</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="sEmail"
+                    value="A carregar..."
+                  />
+                </div>
+                <div class="form-group">
+                  <label>WhatsApp</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="sWhatsapp"
+                    value="A carregar..."
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Localização</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="sLocation"
+                    value="A carregar..."
+                  />
+                </div>
+
+                <h4 style="margin: 20px 0 10px; color: var(--text-primary)">
+                  <i class="fa-solid fa-share-nodes"></i> Redes Sociais
+                </h4>
+                <div class="form-group">
+                  <label>Instagram URL</label>
+                  <input
+                    type="url"
+                    class="form-control"
+                    id="sInstagram"
+                    placeholder="https://instagram.com/..."
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Facebook URL</label>
+                  <input
+                    type="url"
+                    class="form-control"
+                    id="sFacebook"
+                    placeholder="https://facebook.com/..."
+                  />
+                </div>
+                <div class="form-group">
+                  <label>TikTok URL</label>
+                  <input
+                    type="url"
+                    class="form-control"
+                    id="sTiktok"
+                    placeholder="https://tiktok.com/..."
+                  />
+                </div>
+                <button type="submit" class="btn-admin btn-admin--gold">
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
+                </button>
+              </form>
+            </div>
+
+            <div class="settings-right">
+              <div class="admin-card settings-card">
+                <div class="admin-card__header">
+                  <h3 class="admin-card__title">
+                    <i class="fa-solid fa-palette"></i> Aparência
+                  </h3>
+                </div>
+                <form class="settings-form" onsubmit="saveSettings(event)">
+                  <div class="form-group">
+                    <label>Cor Principal (Gold)</label>
+                    <div class="color-picker-row">
+                      <input
+                        type="color"
+                        class="form-color"
+                        id="sColorPicker"
+                        value="#b8860b"
+                      />
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="sColorText"
+                        value="#b8860b"
+                      />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Modo Predefinido</label>
+                    <select class="form-control">
+                      <option>Claro</option>
+                      <option>Escuro</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn-admin btn-admin--gold">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar
+                  </button>
+                </form>
+              </div>
+
+              <div class="admin-card settings-card">
+                <div class="admin-card__header">
+                  <h3 class="admin-card__title">
+                    <i class="fa-solid fa-truck"></i> Entregas
+                  </h3>
+                </div>
+                <form class="settings-form" onsubmit="saveSettings(event)">
+                  <div class="form-group">
+                    <label>Taxa de Entrega (Kz)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="sDeliveryFee"
+                      value="500"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Entrega Grátis acima de (Kz)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="sFreeDelivery"
+                      value="10000"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label>Prazo médio de entrega</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="sDeliveryTime"
+                      value="24-48 horas"
+                    />
+                  </div>
+                  <button type="submit" class="btn-admin btn-admin--gold">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Imagens do Site -->
+          <div
+            class="admin-card settings-card"
+            style="grid-column: 1 / -1; margin-top: 16px"
+          >
+            <div class="admin-card__header">
+              <h3 class="admin-card__title">
+                <i class="fa-solid fa-image"></i> Imagens do Site
+              </h3>
+            </div>
+            <form
+              class="settings-form"
+              onsubmit="saveSettingsImages(event)"
+              style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px"
+            >
+              <!-- Hero Image -->
+              <div>
+                <label
+                  style="
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    display: block;
+                    color: var(--text-primary);
+                  "
+                >
+                  <i class="fa-solid fa-panorama"></i> Imagem do Hero (Homepage)
+                </label>
+                <div
+                  class="img-upload-zone"
+                  id="heroUploadZone"
+                  onclick="document.getElementById('heroImageFile').click()"
+                  style="
+                    min-height: 160px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    border: 2px dashed var(--border-light);
+                    border-radius: 12px;
+                    padding: 16px;
+                    transition: border-color 0.3s;
+                  "
+                >
+                  <img
+                    id="heroImagePreview"
+                    src=""
+                    alt=""
+                    style="
+                      display: none;
+                      max-width: 100%;
+                      max-height: 200px;
+                      border-radius: 8px;
+                      margin-bottom: 8px;
+                      object-fit: cover;
+                    "
+                  />
+                  <div id="heroImagePlaceholder">
+                    <i
+                      class="fa-solid fa-cloud-arrow-up"
+                      style="
+                        font-size: 2rem;
+                        color: var(--gold);
+                        margin-bottom: 8px;
+                      "
+                    ></i>
+                    <div
+                      style="
+                        font-size: 0.85rem;
+                        color: var(--text-muted);
+                        text-align: center;
+                      "
+                    >
+                      Clica para enviar imagem do Hero
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.75rem;
+                        color: var(--text-muted);
+                        margin-top: 4px;
+                        text-align: center;
+                      "
+                    >
+                      JPG · PNG · WebP — máx. 10 MB
+                    </div>
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  id="heroImageFile"
+                  name="hero_image"
+                  accept=".jpg,.jpeg,.png,.webp"
+                  style="display: none"
+                  onchange="
+                    previewSettingsImage(
+                      this,
+                      'heroImagePreview',
+                      'heroImagePlaceholder',
+                    )
+                  "
+                />
+              </div>
+
+              <!-- Login Image -->
+              <div>
+                <label
+                  style="
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    display: block;
+                    color: var(--text-primary);
+                  "
+                >
+                  <i class="fa-solid fa-right-to-bracket"></i> Imagem do Login
+                  (Painel Esquerdo)
+                </label>
+                <div
+                  class="img-upload-zone"
+                  id="loginUploadZone"
+                  onclick="document.getElementById('loginImageFile').click()"
+                  style="
+                    min-height: 160px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    border: 2px dashed var(--border-light);
+                    border-radius: 12px;
+                    padding: 16px;
+                    transition: border-color 0.3s;
+                  "
+                >
+                  <img
+                    id="loginImagePreview"
+                    src=""
+                    alt=""
+                    style="
+                      display: none;
+                      max-width: 100%;
+                      max-height: 200px;
+                      border-radius: 8px;
+                      margin-bottom: 8px;
+                      object-fit: cover;
+                    "
+                  />
+                  <div id="loginImagePlaceholder">
+                    <i
+                      class="fa-solid fa-cloud-arrow-up"
+                      style="
+                        font-size: 2rem;
+                        color: var(--gold);
+                        margin-bottom: 8px;
+                      "
+                    ></i>
+                    <div
+                      style="
+                        font-size: 0.85rem;
+                        color: var(--text-muted);
+                        text-align: center;
+                      "
+                    >
+                      Clica para enviar imagem do Login
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.75rem;
+                        color: var(--text-muted);
+                        margin-top: 4px;
+                        text-align: center;
+                      "
+                    >
+                      JPG · PNG · WebP — máx. 10 MB
+                    </div>
+                  </div>
+                </div>
+                <input
+                  type="file"
+                  id="loginImageFile"
+                  name="login_image"
+                  accept=".jpg,.jpeg,.png,.webp"
+                  style="display: none"
+                  onchange="
+                    previewSettingsImage(
+                      this,
+                      'loginImagePreview',
+                      'loginImagePlaceholder',
+                    )
+                  "
+                />
+              </div>
+
+              <!-- Submit -->
+              <div style="grid-column: 1 / -1; text-align: right">
+                <button type="submit" class="btn-admin btn-admin--gold">
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Imagens
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+      <!-- /.admin-content -->
+    </div>
+    <!-- /.admin-main -->
+
+    <!-- ===== PRODUCT MODAL ===== -->
+    <div class="admin-modal-overlay" id="productModalOverlay">
+      <div class="admin-modal" id="productModal">
+        <div class="admin-modal__header">
+          <h2 id="productModalTitle">Novo Produto</h2>
+          <button class="admin-modal__close" onclick="closeProductModal()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <form class="admin-modal__body" onsubmit="saveProduct(event)">
+          <div class="modal-grid-2">
+            <div class="form-group">
+              <label>Nome do Produto *</label>
+              <input
+                type="text"
+                class="form-control"
+                id="pName"
+                placeholder="Ex: Perfume Elegance 100ml"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Categoria *</label>
+              <select
+                class="form-control"
+                id="pCategory"
+                required
+                onchange="populateSizeCheckboxes()"
+              >
+                <option value="">Selecionar...</option>
+                <!-- Populado dinamicamente via JS -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Género *</label>
+              <select class="form-control" id="pGender" required>
+                <option value="unissexo">Unissexo</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+              </select>
+            </div>
+            <!-- Tamanhos Disponíveis (preenchido dinamicamente) -->
+            <div class="form-group" id="sizesGroup" style="display: none">
+              <label
+                ><i class="fa-solid fa-ruler"></i> Tamanhos Disponíveis</label
+              >
+              <div
+                id="sizesCheckboxes"
+                style="
+                  display: flex;
+                  flex-wrap: wrap;
+                  gap: 8px;
+                  margin-top: 6px;
+                "
+              ></div>
+            </div>
+            <div class="form-group">
+              <label>Preço (Kz) *</label>
+              <input
+                type="number"
+                class="form-control"
+                id="pPrice"
+                placeholder="4500"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>Preço Antigo (Kz)</label>
+              <input
+                type="number"
+                class="form-control"
+                id="pOldPrice"
+                placeholder="Opcional"
+              />
+            </div>
+            <div class="form-group">
+              <label>Stock</label>
+              <input
+                type="number"
+                class="form-control"
+                id="pStock"
+                placeholder="50"
+              />
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select class="form-control" id="pStatus">
+                <option value="ativo">Activo</option>
+                <option value="inativo">Inactivo</option>
+                <option value="rascunho">Rascunho</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Imagem do Produto</label>
+
+            <!-- Zona de upload / pré-visualização -->
+            <div
+              class="img-upload-zone"
+              id="imgUploadZone"
+              onclick="document.getElementById('pImageFile').click()"
+            >
+              <!-- Grelha de miniaturas (preenchida via JS) -->
+              <div
+                id="imgThumbnails"
+                style="
+                  display: none;
+                  flex-wrap: wrap;
+                  gap: 8px;
+                  justify-content: center;
+                "
+              ></div>
+              <div id="imgPlaceholder">
+                <i
+                  class="fa-solid fa-cloud-arrow-up"
+                  style="
+                    font-size: 2rem;
+                    color: var(--gold);
+                    margin-bottom: 8px;
+                  "
+                ></i>
+                <div style="font-size: 0.85rem; color: var(--text-muted)">
+                  Clica ou arrasta imagens aqui (até 10)
+                </div>
+                <div
+                  style="
+                    font-size: 0.75rem;
+                    color: var(--text-muted);
+                    margin-top: 4px;
+                  "
+                >
+                  JPG · PNG · WebP · MP4 — máx. 10 MB
+                </div>
+              </div>
+            </div>
+
+            <!-- Input real (invisível) -->
+            <input
+              type="file"
+              id="pImageFile"
+              name="imagem"
+              accept=".jpg,.jpeg,.png,.webp,.mp4"
+              multiple
+              style="display: none"
+              onchange="previewProductImage(this)"
+            />
+
+            <!-- URL da imagem existente (usada em modo edição sem novo ficheiro) -->
+            <input type="hidden" id="pImageUrl" />
+
+            <!-- Nome do ficheiro seleccionado -->
+            <div
+              id="imgFileName"
+              style="
+                font-size: 0.78rem;
+                color: var(--text-muted);
+                margin-top: 6px;
+                text-align: center;
+              "
+            ></div>
+          </div>
+
+          <div class="form-group">
+            <label>Tag</label>
+            <select class="form-control" id="pTag">
+              <option value="">Sem tag</option>
+              <option value="new">Novo</option>
+              <option value="bestseller">Mais Vendido</option>
+              <option value="promo">Promoção</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Descrição</label>
+            <textarea
+              class="form-control"
+              id="pDescription"
+              rows="3"
+              placeholder="Descrição do produto..."
+            ></textarea>
+          </div>
+          <div class="admin-modal__footer">
+            <button
+              type="button"
+              class="btn-admin btn-admin--outline"
+              onclick="closeProductModal()"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-admin btn-admin--gold">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Produto
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===== CATEGORY MODAL ===== -->
+    <div class="admin-modal-overlay" id="categoryModalOverlay">
+      <div class="admin-modal admin-modal--sm" id="categoryModal">
+        <div class="admin-modal__header">
+          <h2 id="categoryModalTitle">Nova Categoria</h2>
+          <button class="admin-modal__close" onclick="closeCategoryModal()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <form class="admin-modal__body" onsubmit="saveCategory(event)">
+          <div class="form-group">
+            <label>Nome da Categoria *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cName"
+              placeholder="Ex: Perfumes"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Parâmetro URL</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cSlug"
+              placeholder="Ex: perfumes"
+            />
+          </div>
+          <div class="form-group">
+            <label>URL da Imagem</label>
+            <input
+              type="url"
+              class="form-control"
+              id="cImage"
+              placeholder="https://..."
+            />
+          </div>
+          <div class="form-group">
+            <label>Ícone FontAwesome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="cIcon"
+              placeholder="fa-solid fa-spray-can-sparkles"
+            />
+          </div>
+          <div class="form-group">
+            <label>Tipo de Tamanho</label>
+            <select class="form-control" id="cSizeType">
+              <option value="none">Nenhum</option>
+              <option value="clothing">Vestuário (Roupa)</option>
+              <option value="shoes">Calçado (Sapatos)</option>
+              <option value="fragrance">Perfumaria (Perfumes/Cremes)</option>
+            </select>
+          </div>
+          <div class="admin-modal__footer">
+            <button
+              type="button"
+              class="btn-admin btn-admin--outline"
+              onclick="closeCategoryModal()"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn-admin btn-admin--gold">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===== ORDER DETAIL MODAL ===== -->
+    <div class="admin-modal-overlay" id="orderModalOverlay">
+      <div class="admin-modal" id="orderModal">
+        <div class="admin-modal__header">
+          <h2 id="orderModalTitle">Detalhes da Encomenda</h2>
+          <button class="admin-modal__close" onclick="closeOrderModal()">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="admin-modal__body" id="orderModalBody">
+          <!-- JS injected -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== JS ===== -->
+    <script src="../js/toast.js"></script>
+    <script src="../js/safeRedirect.js"></script>
+    <script src="../js/admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Move Plus — Perfumes, Cremes, Roupa e Acessórios aos melhores preços. Compras fáceis e rápidas via WhatsApp."
+    />
+    <title>Move Plus — Perfumes, Cremes, Roupa & Acessórios</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar" id="navbar">
+      <div class="container navbar__inner">
+        <a href="index.html" class="navbar__logo">Move <span>Plus</span></a>
+
+        <ul class="navbar__nav" id="navMenu"></ul>
+
+        <div class="navbar__actions">
+          <div class="navbar__search">
+            <i class="fa-solid fa-magnifying-glass navbar__search-icon"></i>
+            <input type="text" placeholder="Pesquisar..." />
+          </div>
+
+          <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-sun"></i>
+          </button>
+
+          <a href="pages/cartPage.html" class="navbar__icon" title="Carrinho">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge cart-badge" style="display: none">0</span>
+          </a>
+
+          <a href="pages/userPage.html" class="navbar__icon" title="Perfil">
+            <i class="fa-solid fa-user"></i>
+          </a>
+
+          <a
+            href="https://wa.me/244999999999"
+            target="_blank"
+            class="navbar__icon"
+            id="gNavWhatsapp"
+            title="WhatsApp"
+            style="color: var(--whatsapp)"
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+
+          <div class="navbar__hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ======== HERO ======== -->
+    <section class="hero" id="hero">
+      <img
+        id="heroImage"
+        src="https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=1600&q=80"
+        alt="Promoção"
+        class="hero__bg"
+      />
+      <div class="container hero__content">
+        <div class="hero__tag">
+          <i class="fa-solid fa-fire"></i>
+          Novidades Frescas
+        </div>
+        <h1 class="hero__title">Novidades da Semana</h1>
+        <p class="hero__subtitle">
+          Descobre os melhores perfumes, cremes e moda ao melhor preço.
+          Encomenda fácil, entrega rápida.
+        </p>
+        <div class="hero__buttons">
+          <a href="#produtos" class="btn btn--gold btn--lg">
+            <i class="fa-solid fa-shopping-bag"></i>
+            Comprar Agora
+          </a>
+          <a href="#categorias" class="btn btn--outline-white btn--lg">
+            Ver Categorias
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== TRUST BAR ======== -->
+    <section class="trust-bar">
+      <div class="container">
+        <div class="trust-bar__grid">
+          <div class="trust-badge">
+            <div class="trust-badge__icon">
+              <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div class="trust-badge__text">
+              <h4>Entrega Rápida</h4>
+              <p>Em toda Luanda</p>
+            </div>
+          </div>
+          <div class="trust-badge">
+            <div class="trust-badge__icon">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="trust-badge__text">
+              <h4>Produtos Originais</h4>
+              <p>Garantia de qualidade</p>
+            </div>
+          </div>
+          <div class="trust-badge">
+            <div class="trust-badge__icon">
+              <i class="fa-solid fa-rotate-left"></i>
+            </div>
+            <div class="trust-badge__text">
+              <h4>Troca Fácil</h4>
+              <p>Até 7 dias</p>
+            </div>
+          </div>
+          <div class="trust-badge">
+            <div class="trust-badge__icon">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div class="trust-badge__text">
+              <h4>Suporte WhatsApp</h4>
+              <p>Resposta imediata</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== CATEGORIAS ======== -->
+    <section class="section section--alt" id="categorias">
+      <div class="container">
+        <div class="section__header fade-in">
+          <h2 class="section__title">Explorar Categorias</h2>
+          <p class="section__subtitle">
+            Encontra o que procuras — tudo organizado para comprares rápido e
+            fácil.
+          </p>
+        </div>
+
+        <div class="categories-grid fade-in" id="categoriesGrid">
+          <!-- Categorias serão injetadas via JS -->
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem">
+            A carregar categorias...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== PROMO BANNER ======== -->
+    <section class="section">
+      <div class="container">
+        <div class="promo-banner fade-in">
+          <div class="promo-banner__text">
+            <h3 class="promo-banner__title">
+              🎉 Promoção Especial — Até 40% de Desconto!
+            </h3>
+            <p class="promo-banner__desc">
+              Aproveita os preços especiais desta semana. Stock limitado — não
+              deixes escapar!
+            </p>
+          </div>
+          <a href="pages/categPage.html?cat=promocoes" class="btn btn--gold"
+            >Ver Promoções</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== PRODUTOS EM DESTAQUE ======== -->
+    <section class="section section--alt" id="produtos">
+      <div class="container">
+        <div class="section__header fade-in">
+          <h2 class="section__title">Produtos em Destaque</h2>
+          <p class="section__subtitle">
+            Os mais procurados — qualidade garantida, preços acessíveis.
+          </p>
+        </div>
+
+        <div class="products-grid fade-in" id="featuredProductsGrid">
+          <!-- Produtos serão injetados via JS -->
+          <div style="grid-column: 1 / -1; text-align: center; padding: 2rem">
+            A carregar destaques...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="footer" id="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <!-- Brand -->
+          <div>
+            <div class="footer__brand-name" id="gBrandName">
+              Move <span>Plus</span>
+            </div>
+            <p class="footer__brand-desc" id="gBrandSlogan">
+              A tua loja online de confiança. Perfumes, cremes, roupa e
+              acessórios — tudo ao melhor preço com entrega rápida.
+            </p>
+            <div class="footer__socials">
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgInstagram"
+                title="Instagram"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgFacebook"
+                title="Facebook"
+                ><i class="fa-brands fa-facebook-f"></i
+              ></a>
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgTiktok"
+                title="TikTok"
+                ><i class="fa-brands fa-tiktok"></i
+              ></a>
+              <a
+                href="#"
+                target="_blank"
+                class="footer__social-icon"
+                id="gImgWhatsapp"
+                title="WhatsApp"
+                ><i class="fa-brands fa-whatsapp"></i
+              ></a>
+            </div>
+          </div>
+
+          <!-- Links Rápidos -->
+          <div>
+            <h4 class="footer__col-title">Loja</h4>
+            <a href="pages/categPage.html?cat=perfumes" class="footer__link"
+              >Perfumes</a
+            >
+            <a href="pages/categPage.html?cat=cremes" class="footer__link"
+              >Cremes</a
+            >
+            <a href="pages/categPage.html?cat=roupa" class="footer__link"
+              >Roupa</a
+            >
+            <a href="pages/categPage.html?cat=acessorios" class="footer__link"
+              >Acessórios</a
+            >
+            <a href="pages/categPage.html?cat=promocoes" class="footer__link"
+              >Promoções</a
+            >
+          </div>
+
+          <!-- Ajuda 
+          <div>
+            <h4 class="footer__col-title">Ajuda</h4>
+            <a href="#" class="footer__link">Como Comprar</a>
+            <a href="#" class="footer__link">Entregas</a>
+            <a href="#" class="footer__link">Trocas e Devoluções</a>
+            <a href="#" class="footer__link">Perguntas Frequentes</a>
+          </div>-->
+
+          <!-- Contacto -->
+          <div>
+            <h4 class="footer__col-title">Contacto</h4>
+            <a href="#" target="_blank" class="footer__link" id="gLinkWhatsapp"
+              ><i
+                class="fa-brands fa-whatsapp"
+                style="margin-right: 6px; color: var(--whatsapp)"
+              ></i>
+              <span id="gTextWhatsapp">+244 999 999 999</span></a
+            >
+            <a href="#" class="footer__link" id="gLinkEmail"
+              ><i class="fa-solid fa-envelope" style="margin-right: 6px"></i>
+              <span id="gTextEmail">info@moveplus.ao</span></a
+            >
+            <a href="#" class="footer__link"
+              ><i
+                class="fa-solid fa-location-dot"
+                style="margin-right: 6px"
+              ></i>
+              <span id="gTextLocation">Luanda, Angola</span></a
+            >
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <span>© 2026 Move Plus. Todos os direitos reservados.</span>
+          
+        </div>
+      </div>
+    </footer>
+
+    <!-- ======== FLOATING WHATSAPP ======== -->
+    <a
+      href="https://wa.me/244999999999"
+      target="_blank"
+      class="whatsapp-float"
+      id="gFloatingWhatsapp"
+      title="Contactar via WhatsApp"
+    >
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="js/safeRedirect.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+      // Load Dynamic Data on Index
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Load user's favorite IDs (empty if not logged in)
+        const favoriteIds = await API.getFavoriteIds();
+
+        // 1. Load Categories
+        const catGrid = document.getElementById("categoriesGrid");
+        try {
+          const categories = await API.getCategories();
+          if (categories && categories.length > 0) {
+            catGrid.innerHTML = categories
+              .map((c) => API.renderCategoryCard(c))
+              .join("");
+          } else {
+            catGrid.innerHTML =
+              "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhuma categoria encontrada.</div>";
+          }
+        } catch (err) {
+          catGrid.innerHTML =
+            "<div style='grid-column: 1 / -1; text-align: center; color: red;'>Falha ao carregar categorias.</div>";
+        }
+
+        // 2. Load Featured Products
+        const prodGrid = document.getElementById("featuredProductsGrid");
+        try {
+          // You can fetch ALL products or a subset (e.g. max 8). We fetch all active products for now.
+          let products = await API.getProducts({ status: "ativo", limit: 8 });
+
+          if (products && products.length > 0) {
+            prodGrid.innerHTML = products
+              .map((p) => API.renderProductCard(p, favoriteIds))
+              .join("");
+          } else {
+            prodGrid.innerHTML =
+              "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhum produto encontrado.</div>";
+          }
+        } catch (err) {
+          prodGrid.innerHTML =
+            "<div style='grid-column: 1 / -1; text-align: center; color: red;'>Falha ao carregar produtos.</div>";
+        }
+      });
+    </script>
+  </body>
+</html>

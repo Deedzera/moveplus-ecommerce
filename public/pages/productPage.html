@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Move Plus — Detalhes do produto. Encomenda fácil e rápida pelo WhatsApp."
+    />
+    <title>Produto — Move Plus</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar" id="navbar">
+      <div class="container navbar__inner">
+        <a href="/" class="navbar__logo">Move <span>Plus</span></a>
+
+        <ul class="navbar__nav" id="navMenu"></ul>
+
+        <div class="navbar__actions">
+          <div class="navbar__search">
+            <i class="fa-solid fa-magnifying-glass navbar__search-icon"></i>
+            <input type="text" placeholder="Pesquisar..." />
+          </div>
+
+          <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-sun"></i>
+          </button>
+
+          <a href="/pages/cartPage.html" class="navbar__icon" title="Carrinho">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge cart-badge" style="display: none">0</span>
+          </a>
+
+          <a href="/pages/userPage.html" class="navbar__icon" title="Perfil">
+            <i class="fa-solid fa-user"></i>
+          </a>
+
+          <a
+            href="https://wa.me/244999999999"
+            target="_blank"
+            class="navbar__icon"
+            id="gNavWhatsapp"
+            title="WhatsApp"
+            style="color: var(--whatsapp)"
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+
+          <div class="navbar__hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ======== PRODUCT DETAIL ======== -->
+    <main class="product-detail">
+      <div class="container">
+        <!-- Breadcrumb -->
+        <div
+          class="listing__breadcrumb fade-in"
+          style="margin-bottom: 32px"
+          id="productBreadcrumb"
+        >
+          <a href="/">Início</a>
+          <i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i>
+          <a href="/pages/categPage.html" id="bcCategoryLink">Categoria</a>
+          <i class="fa-solid fa-chevron-right" style="font-size: 0.65rem"></i>
+          <span id="bcProductName">A carregar...</span>
+        </div>
+
+        <!-- Product Grid -->
+        <div
+          class="product-detail__grid fade-in"
+          id="productDetailGrid"
+          style="display: none"
+        >
+          <!-- Gallery -->
+          <div class="product-detail__gallery">
+            <img
+              src=""
+              alt="Produto"
+              class="product-detail__main-img"
+              id="mainImg"
+            />
+            <div class="product-detail__thumbs" id="productThumbs">
+              <!-- JS Injected Thumbs -->
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="product-detail__info">
+            <span class="product-detail__category" id="prodCategory"
+              >Categoria</span
+            >
+            <h1 class="product-detail__name" id="prodName">
+              Carregando Produto...
+            </h1>
+
+            <div class="product-detail__price-box">
+              <span class="product-detail__price" id="prodPrice">0 Kz</span>
+              <span class="product-detail__price-old" id="prodOldPrice"></span>
+              <span
+                class="product-tag product-tag--promo"
+                style="margin-left: 8px; display: none"
+                id="prodPromoTag"
+                >Promoção</span
+              >
+            </div>
+
+            <p class="product-detail__desc" id="prodDesc">
+              A carregar descrição...
+            </p>
+
+            <!-- Variations (populated dynamically) -->
+            <div
+              class="product-detail__variations"
+              id="productVariations"
+              style="display: none"
+            >
+              <div class="variation-group">
+                <span class="variation-group__label">Tamanho</span>
+                <div class="variation-group__options" id="variationOptions">
+                  <!-- JS injected -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Quantity -->
+            <div class="product-detail__qty">
+              <span class="qty-label">Quantidade</span>
+              <div class="qty-control">
+                <button data-qty="minus">−</button>
+                <input type="number" value="1" min="1" />
+                <button data-qty="plus">+</button>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="product-detail__actions">
+              <button
+                class="btn btn--whatsapp btn--lg"
+                id="btnWhatsapp"
+                style="width: 100%"
+              >
+                <i class="fa-brands fa-whatsapp" style="font-size: 1.3rem"></i>
+                Finalizar no WhatsApp
+              </button>
+              <button
+                class="btn btn--outline"
+                id="btnAddToCart"
+                style="width: 100%"
+              >
+                <i class="fa-solid fa-bag-shopping"></i>
+                Adicionar ao Carrinho
+              </button>
+            </div>
+
+            <!-- Trust badges -->
+            <div class="trust-features">
+              <div class="trust-feature">
+                <i class="fa-solid fa-truck-fast"></i>
+                Entrega rápida
+              </div>
+              <div class="trust-feature">
+                <i class="fa-solid fa-shield-halved"></i>
+                Produto original
+              </div>
+              <div class="trust-feature">
+                <i class="fa-solid fa-rotate-left"></i>
+                Troca fácil
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======== RELATED PRODUCTS ======== -->
+        <div class="related-products fade-in">
+          <div class="section__header">
+            <h2 class="section__title">Produtos Relacionados</h2>
+            <p class="section__subtitle">
+              Outros produtos que podem interessar-te.
+            </p>
+          </div>
+
+          <div class="products-grid" id="relatedProductsGrid">
+            <div style="grid-column: 1 / -1; text-align: center">
+              A procurar produtos semelhantes...
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="footer" id="footer" style="margin-top: 80px">
+      <div class="container">
+        <div class="footer__grid">
+          <div>
+            <div class="footer__brand-name" id="gBrandName">
+              Move <span>Plus</span>
+            </div>
+            <p class="footer__brand-desc" id="gBrandSlogan">
+              A tua loja online de confiança. Perfumes, cremes, roupa e
+              acessórios — tudo ao melhor preço com entrega rápida.
+            </p>
+            <div class="footer__socials">
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgInstagram"
+                title="Instagram"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgFacebook"
+                title="Facebook"
+                ><i class="fa-brands fa-facebook-f"></i
+              ></a>
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgTiktok"
+                title="TikTok"
+                ><i class="fa-brands fa-tiktok"></i
+              ></a>
+              <a
+                href="#"
+                target="_blank"
+                class="footer__social-icon"
+                id="gImgWhatsapp"
+                title="WhatsApp"
+                ><i class="fa-brands fa-whatsapp"></i
+              ></a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer__col-title">Loja</h4>
+            <a href="/pages/categPage.html?cat=perfumes" class="footer__link"
+              >Perfumes</a
+            >
+            <a href="/pages/categPage.html?cat=cremes" class="footer__link"
+              >Cremes</a
+            >
+            <a href="/pages/categPage.html?cat=roupa" class="footer__link"
+              >Roupa</a
+            >
+            <a href="/pages/categPage.html?cat=acessorios" class="footer__link"
+              >Acessórios</a
+            >
+            <a href="/pages/categPage.html?cat=promocoes" class="footer__link"
+              >Promoções</a
+            >
+          </div>
+          <!-- Ajuda <div>
+            <h4 class="footer__col-title">Ajuda</h4>
+            <a href="#" class="footer__link">Como Comprar</a>
+            <a href="#" class="footer__link">Entregas</a>
+            <a href="#" class="footer__link">Trocas e Devoluções</a>
+            <a href="#" class="footer__link">Perguntas Frequentes</a>
+          </div>-->
+          <div>
+            <h4 class="footer__col-title">Contacto</h4>
+            <a href="#" target="_blank" class="footer__link" id="gLinkWhatsapp"
+              ><i
+                class="fa-brands fa-whatsapp"
+                style="margin-right: 6px; color: var(--whatsapp)"
+              ></i>
+              <span id="gTextWhatsapp">+244 999 999 999</span></a
+            >
+            <a href="#" class="footer__link" id="gLinkEmail"
+              ><i class="fa-solid fa-envelope" style="margin-right: 6px"></i>
+              <span id="gTextEmail">info@moveplus.ao</span></a
+            >
+            <a href="#" class="footer__link"
+              ><i
+                class="fa-solid fa-location-dot"
+                style="margin-right: 6px"
+              ></i>
+              <span id="gTextLocation">Luanda, Angola</span></a
+            >
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Move Plus. Todos os direitos reservados.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ======== FLOATING WHATSAPP ======== -->
+    <a
+      href="#"
+      target="_blank"
+      class="whatsapp-float"
+      id="gFloatingWhatsapp"
+      title="Contactar via WhatsApp"
+    >
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="/js/safeRedirect.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Detectar slug da URL path (/produto/camisa-preta) ou fallback para ?id=
+        const pathMatch = window.location.pathname.match(
+          /^\/produto\/([^\/]+)$/,
+        );
+        const params = new URLSearchParams(window.location.search);
+        const productSlug = pathMatch ? pathMatch[1] : null;
+        const productId = params.get("id");
+
+        if (!productSlug && !productId) {
+          document.querySelector(".product-detail").innerHTML =
+            "<div class='container' style='text-align:center; padding: 4rem 0;'>Produto não especificado.</div>";
+          return;
+        }
+
+        try {
+          const product = productSlug
+            ? await API.getProductBySlug(productSlug)
+            : await API.getProductById(productId);
+          if (!product) throw new Error("Produto não encontrado");
+
+          document.title = `${product.name} — Move Plus`;
+
+          // ---- Setup Breadcrumbs ----
+          const bcCategoryLink = document.getElementById("bcCategoryLink");
+          bcCategoryLink.textContent = product.category_name || "Diversos";
+          bcCategoryLink.href = `/pages/categPage.html?cat=${product.category_slug || ""}`; // Assuming category slug might not be directly in response yet
+          document.getElementById("bcProductName").textContent = product.name;
+
+          // ---- Setup Info ----
+          document.getElementById("prodCategory").textContent =
+            product.category_name || "Diversos";
+          document.getElementById("prodName").textContent = product.name;
+          document.getElementById("prodPrice").textContent = API.formatPrice(
+            product.price,
+          );
+
+          if (product.old_price) {
+            document.getElementById("prodOldPrice").textContent =
+              API.formatPrice(product.old_price);
+
+            // Calc promo %
+            const discount = Math.round(
+              (1 - product.price / product.old_price) * 100,
+            );
+            if (discount > 0) {
+              const tag = document.getElementById("prodPromoTag");
+              tag.textContent = `-${discount}%`;
+              tag.style.display = "inline-block";
+            }
+          }
+
+          if (product.description) {
+            document.getElementById("prodDesc").textContent =
+              product.description;
+          }
+
+          // ---- Setup Variations (Sizes) ----
+          const variationsBlock = document.getElementById("productVariations");
+          const variationOpts = document.getElementById("variationOptions");
+          if (product.available_sizes && product.available_sizes.trim()) {
+            const sizes = product.available_sizes
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean);
+            if (sizes.length > 0) {
+              variationsBlock.style.display = "";
+              variationOpts.innerHTML = sizes
+                .map(
+                  (s, i) =>
+                    `<button class="variation-btn ${i === 0 ? "variation-btn--active" : ""}">${s}</button>`,
+                )
+                .join("");
+              // Click handler for variation buttons
+              variationOpts
+                .querySelectorAll(".variation-btn")
+                .forEach((btn) => {
+                  btn.addEventListener("click", () => {
+                    variationOpts
+                      .querySelectorAll(".variation-btn")
+                      .forEach((b) =>
+                        b.classList.remove("variation-btn--active"),
+                      );
+                    btn.classList.add("variation-btn--active");
+                  });
+                });
+            }
+          }
+
+          // ---- Setup Image/Gallery ----
+          const images = product.image_url
+            ? product.image_url.split(",").map((u) => u.trim())
+            : [
+                "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80",
+              ]; // Default
+
+          const mainImgEl = document.getElementById("mainImg");
+          mainImgEl.src = images[0];
+
+          // Setup thumbnails if more than 1 image (We're mocking multiple using the same image for demonstration)
+          const thumbsEl = document.getElementById("productThumbs");
+          if (images.length === 1) {
+            // Se tivermos só 1 imagem real, vamos criar umas de placeholder só para manter a demo bonita, ou podemos remover as thumbnails.
+            thumbsEl.innerHTML = `
+              <img src="${images[0]}" alt="Vista 1" class="product-detail__thumb product-detail__thumb--active" data-full="${images[0]}">
+            `;
+          } else {
+            // Se tiver multiplas
+            thumbsEl.innerHTML = images
+              .map(
+                (img, i) => `
+                <img src="${img}" alt="Vista ${i + 1}" class="product-detail__thumb ${i === 0 ? "product-detail__thumb--active" : ""}" data-full="${img}">
+             `,
+              )
+              .join("");
+          }
+
+          // Thumbnail gallery JS setup
+          const thumbs = document.querySelectorAll(".product-detail__thumb");
+          thumbs.forEach((thumb) => {
+            thumb.addEventListener("click", () => {
+              document
+                .querySelectorAll(".product-detail__thumb")
+                .forEach((t) =>
+                  t.classList.remove("product-detail__thumb--active"),
+                );
+              thumb.classList.add("product-detail__thumb--active");
+              mainImgEl.src = thumb.dataset.full;
+            });
+          });
+
+          // Show the content!
+          document.getElementById("productDetailGrid").style.display = "grid";
+
+          // ---- Stock Check ----
+          const isOutOfStock = product.stock === 0 || product.stock === null;
+          const btnWhatsapp = document.getElementById("btnWhatsapp");
+          const btnAddToCart = document.getElementById("btnAddToCart");
+
+          if (isOutOfStock) {
+            // Disable both buttons
+            btnWhatsapp.disabled = true;
+            btnWhatsapp.style.opacity = "0.5";
+            btnWhatsapp.style.pointerEvents = "none";
+            btnWhatsapp.innerHTML = '<i class="fa-solid fa-ban"></i> Esgotado';
+
+            btnAddToCart.disabled = true;
+            btnAddToCart.style.opacity = "0.5";
+            btnAddToCart.style.pointerEvents = "none";
+            btnAddToCart.innerHTML =
+              '<i class="fa-solid fa-ban"></i> Sem Stock';
+
+            // Disable quantity controls
+            const qtyInput = document.querySelector(".qty-control input");
+            if (qtyInput) {
+              qtyInput.value = 0;
+              qtyInput.disabled = true;
+            }
+            document
+              .querySelectorAll(".qty-control button")
+              .forEach((b) => (b.disabled = true));
+          } else {
+            // Limit quantity to available stock
+            const qtyInput = document.querySelector(".qty-control input");
+            if (qtyInput && product.stock) {
+              qtyInput.max = product.stock;
+            }
+          }
+
+          // ---- Setup Actions ----
+          if (!isOutOfStock) {
+            btnWhatsapp.addEventListener("click", () => {
+              const activeVariation =
+                document
+                  .querySelector(".variation-btn--active")
+                  ?.textContent.trim() || "";
+              const qty =
+                document.querySelector(".qty-control input")?.value || 1;
+              whatsappCheckout(
+                product.name,
+                API.formatPrice(product.price),
+                activeVariation,
+                qty,
+              );
+            });
+
+            btnAddToCart.addEventListener("click", () => {
+              Cart.addItem({
+                id: product.id,
+                name: product.name,
+                price: API.formatPrice(product.price),
+                variation:
+                  document
+                    .querySelector(".variation-btn--active")
+                    ?.textContent.trim() || "",
+                qty:
+                  parseInt(
+                    document.querySelector(".qty-control input")?.value,
+                  ) || 1,
+                image_url: images[0],
+              });
+              Toast.success("Adicionado ao carrinho!");
+            });
+          }
+
+          // ---- Setup Related Products ----
+          const relatedTarget = document.getElementById("relatedProductsGrid");
+          try {
+            const favIds = await API.getFavoriteIds();
+            const apiFilters = product.category_id
+              ? { category: product.category_slug }
+              : {}; // Necessita slug da cat, se a API não o retorna de imediato, teríamos de ajustar.
+            let related = await API.getProducts();
+            // Simple generic client-side filter for demonstration
+            if (product.category_id) {
+              related = related.filter(
+                (p) =>
+                  p.category_id === product.category_id && p.id != product.id,
+              );
+            } else {
+              related = related.filter((p) => p.id != product.id);
+            }
+
+            related = related.slice(0, 4); // max 4
+
+            if (related.length > 0) {
+              relatedTarget.innerHTML = related
+                .map((p) =>
+                  API.renderProductCard(p, favIds, { linkPrefix: "" }),
+                )
+                .join("");
+            } else {
+              relatedTarget.innerHTML =
+                "<div style='grid-column: 1 / -1; text-align: center;'>Nenhum produto relacionado encontrado.</div>";
+            }
+          } catch (e) {
+            console.error("Related fetch error", e);
+            relatedTarget.innerHTML =
+              "<div style='grid-column: 1 / -1; text-align: center;'>Não foi possível carregar relacionados.</div>";
+          }
+        } catch (err) {
+          console.error(err);
+          document.querySelector(".product-detail").innerHTML =
+            "<div class='container' style='text-align:center; padding: 4rem 0;'>Falha ao carregar detalhes do produto.</div>";
+        }
+      });
+    </script>
+  </body>
+</html>

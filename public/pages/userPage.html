@@ -1,0 +1,1996 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A Minha Conta | Move Plus — Gerir perfil, encomendas e favoritos."
+    />
+    <title>A Minha Conta | Move Plus</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      /* ── Dark mode ── */
+      html.dark {
+        --bg-primary: #0f1117;
+        --bg-alt: #161b24;
+        --bg-card: #1c2333;
+        --bg-surface: #1a2030;
+        --text-primary: #f0f2f5;
+        --text-secondary: #a8b4c4;
+        --text-muted: #5a6a7e;
+        --border-subtle: rgba(255, 255, 255, 0.04);
+        --border-light: rgba(255, 255, 255, 0.09);
+        --border-gold: rgba(184, 134, 11, 0.25);
+        --shadow-card:
+          0 2px 8px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
+        --shadow-hover:
+          0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
+        --gold-dim: rgba(184, 134, 11, 0.14);
+      }
+
+      /* ── Profile hero ── */
+      .profile-hero {
+        padding-top: 72px;
+        background: var(--bg-alt);
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .profile-hero__inner {
+        display: flex;
+        align-items: flex-end;
+        gap: 28px;
+        padding: 48px 0 0;
+        flex-wrap: wrap;
+      }
+
+      .profile-hero__banner {
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          #0f1419 0%,
+          #1a2535 50%,
+          rgba(184, 134, 11, 0.3) 100%
+        );
+        border-radius: var(--card-radius) var(--card-radius) 0 0;
+        overflow: hidden;
+        padding: 36px 40px 0;
+      }
+
+      .profile-hero__banner::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: url("https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1400&q=60")
+          center/cover no-repeat;
+        opacity: 0.12;
+      }
+
+      .profile-hero__avatar-row {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+
+      .profile-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        border: 4px solid var(--bg-card);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        background: var(--gold-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-heading);
+        font-size: 2rem;
+        font-weight: 800;
+        color: #fff;
+        flex-shrink: 0;
+        margin-bottom: -12px;
+        position: relative;
+      }
+
+      .profile-avatar__edit {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--gold-gradient);
+        border: 2px solid var(--bg-card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .profile-hero__info {
+        padding-bottom: 20px;
+        color: #fff;
+      }
+
+      .profile-hero__name {
+        font-family: var(--font-heading);
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 4px;
+        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .profile-hero__email {
+        font-size: 0.88rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 10px;
+      }
+
+      .profile-hero__badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .profile-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(184, 134, 11, 0.2);
+        border: 1px solid rgba(184, 134, 11, 0.35);
+        color: #e6c35c;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      /* ── Profile tabs ── */
+      .profile-tabs {
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border-subtle);
+        position: sticky;
+        top: 72px;
+        z-index: 500;
+        box-shadow: var(--shadow-xs);
+      }
+
+      .profile-tabs__inner {
+        display: flex;
+        gap: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .profile-tabs__inner::-webkit-scrollbar {
+        display: none;
+      }
+
+      .profile-tab {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 24px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        white-space: nowrap;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.25s ease;
+        user-select: none;
+      }
+
+      .profile-tab:hover {
+        color: var(--text-primary);
+        background: var(--bg-surface);
+      }
+
+      .profile-tab.active {
+        color: var(--gold);
+        border-bottom-color: var(--gold);
+      }
+
+      .profile-tab i {
+        font-size: 0.9rem;
+      }
+
+      /* ── Profile content area ── */
+      .profile-content {
+        padding: 48px 0 80px;
+        min-height: 60vh;
+      }
+
+      .profile-panel {
+        display: none;
+      }
+
+      .profile-panel.active {
+        display: block;
+        animation: fadeInUp 0.35s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── Panel headers ── */
+      .panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .panel-title {
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      /* ── Orders ── */
+      .orders-list {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .order-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--card-radius);
+        padding: 20px 24px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 20px;
+        align-items: center;
+        transition: all 0.25s ease;
+        box-shadow: var(--shadow-card);
+      }
+
+      .order-card:hover {
+        border-color: var(--border-gold);
+        box-shadow: var(--shadow-hover);
+      }
+
+      .order-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: var(--gold-dim);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold);
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+
+      .order-info__id {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-bottom: 3px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      .order-info__name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+      }
+
+      .order-info__date {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      .order-meta {
+        text-align: right;
+        flex-shrink: 0;
+      }
+
+      .order-meta__price {
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--gold);
+        margin-bottom: 6px;
+      }
+
+      .order-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+      }
+
+      .order-status--delivered {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .order-status--transit {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .order-status--processing {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .order-status--cancelled {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      html.dark .order-status--delivered {
+        background: rgba(21, 128, 61, 0.2);
+        color: #4ade80;
+      }
+      html.dark .order-status--transit {
+        background: rgba(146, 64, 14, 0.2);
+        color: #fbbf24;
+      }
+      html.dark .order-status--processing {
+        background: rgba(29, 78, 216, 0.2);
+        color: #60a5fa;
+      }
+      html.dark .order-status--cancelled {
+        background: rgba(220, 38, 38, 0.2);
+        color: #f87171;
+      }
+
+      /* ── Favourites grid ── */
+      .fav-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .fav-card {
+        background: var(--bg-card);
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        border: 1px solid var(--border-subtle);
+        box-shadow: var(--shadow-card);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .fav-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--border-gold);
+      }
+
+      .fav-card__img-wrap {
+        position: relative;
+        aspect-ratio: 1;
+        overflow: hidden;
+        background: var(--bg-surface);
+      }
+
+      .fav-card__img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+      }
+
+      .fav-card:hover .fav-card__img {
+        transform: scale(1.06);
+      }
+
+      .fav-card__remove {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--danger);
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.25s;
+        backdrop-filter: blur(6px);
+      }
+
+      .fav-card__remove:hover {
+        background: var(--danger);
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .fav-card__info {
+        padding: 14px 16px;
+      }
+
+      .fav-card__cat {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+
+      .fav-card__name {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .fav-card__price {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--gold);
+      }
+
+      /* ── Forms (personal data + security) ── */
+      .profile-form {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--card-radius);
+        padding: 32px;
+        box-shadow: var(--shadow-card);
+      }
+
+      .form-section-title {
+        font-family: var(--font-heading);
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+
+      .profile-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+
+      .profile-form-grid--full {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .form-group--full {
+        grid-column: 1 / -1;
+      }
+
+      .form-label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: 0.2px;
+      }
+
+      .form-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .form-input-icon {
+        position: absolute;
+        left: 14px;
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        pointer-events: none;
+        transition: color 0.25s;
+      }
+
+      .form-input {
+        width: 100%;
+        height: 44px;
+        background: var(--bg-surface);
+        border: 1.5px solid var(--border-light);
+        border-radius: 12px;
+        padding: 0 14px 0 40px;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+        font-family: var(--font-body);
+      }
+
+      .form-input:focus {
+        border-color: var(--gold);
+        background: var(--bg-card);
+        box-shadow: 0 0 0 3px var(--gold-dim);
+        outline: none;
+      }
+
+      .form-input-wrap:focus-within .form-input-icon {
+        color: var(--gold);
+      }
+
+      .form-input::placeholder {
+        color: var(--text-muted);
+      }
+
+      .form-input--no-icon {
+        padding-left: 14px;
+      }
+
+      .form-pwd-toggle {
+        position: absolute;
+        right: 14px;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: color 0.2s;
+      }
+
+      .form-pwd-toggle:hover {
+        color: var(--gold);
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* ── Danger zone ── */
+      .danger-zone {
+        background: var(--bg-card);
+        border: 1.5px solid rgba(220, 38, 38, 0.2);
+        border-radius: var(--card-radius);
+        padding: 24px 32px;
+        margin-top: 24px;
+      }
+
+      .danger-zone__title {
+        font-family: var(--font-heading);
+        font-weight: 700;
+        color: var(--danger);
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+      }
+
+      .danger-zone__desc {
+        font-size: 0.86rem;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+        line-height: 1.6;
+      }
+
+      .btn--danger {
+        background: transparent;
+        border: 1.5px solid var(--danger);
+        color: var(--danger);
+        border-radius: var(--btn-radius);
+        padding: 10px 22px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn--danger:hover {
+        background: var(--danger);
+        color: #fff;
+      }
+
+      /* ── Stats bar ── */
+      .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--card-radius);
+        padding: 20px;
+        text-align: center;
+        box-shadow: var(--shadow-card);
+        transition: all 0.25s;
+      }
+
+      .stat-card:hover {
+        border-color: var(--border-gold);
+        transform: translateY(-2px);
+      }
+
+      .stat-card__value {
+        font-family: var(--font-heading);
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--gold);
+        margin-bottom: 4px;
+      }
+
+      .stat-card__label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      /* ── Empty state ── */
+      .empty-state {
+        text-align: center;
+        padding: 64px 24px;
+        color: var(--text-muted);
+      }
+
+      .empty-state__icon {
+        font-size: 3rem;
+        margin-bottom: 16px;
+        opacity: 0.4;
+      }
+
+      .empty-state h3 {
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+      }
+
+      .empty-state p {
+        font-size: 0.88rem;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 768px) {
+        .profile-hero__banner {
+          padding: 28px 20px 0;
+        }
+        .profile-form-grid {
+          grid-template-columns: 1fr;
+        }
+        .profile-stats {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px;
+        }
+        .stat-card {
+          padding: 14px;
+        }
+        .stat-card__value {
+          font-size: 1.4rem;
+        }
+        .profile-form {
+          padding: 20px;
+        }
+        .order-card {
+          grid-template-columns: auto 1fr;
+        }
+        .order-meta {
+          grid-column: 1 / -1;
+          text-align: left;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .order-meta__price {
+          margin-bottom: 0;
+        }
+        .fav-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .profile-tab {
+          padding: 14px 16px;
+          font-size: 0.82rem;
+        }
+        .profile-tab span {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .fav-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+        .profile-stats {
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar" id="navbar">
+      <div class="container navbar__inner">
+        <a href="../index.html" class="navbar__logo">Move <span>Plus</span></a>
+
+        <ul class="navbar__nav" id="navMenu"></ul>
+
+        <div class="navbar__actions">
+          <div class="navbar__search">
+            <i class="fa-solid fa-magnifying-glass navbar__search-icon"></i>
+            <input type="text" placeholder="Pesquisar..." />
+          </div>
+
+          <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-sun"></i>
+          </button>
+
+          <a href="cartPage.html" class="navbar__icon" title="Carrinho">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge cart-badge" style="display: none">0</span>
+          </a>
+
+          <a
+            href="userPage.html"
+            class="navbar__icon navbar__link--active"
+            title="Perfil"
+          >
+            <i class="fa-solid fa-user"></i>
+          </a>
+
+          <a
+            href="https://wa.me/244999999999"
+            target="_blank"
+            class="navbar__icon"
+            id="gNavWhatsapp"
+            title="WhatsApp"
+            style="color: var(--whatsapp)"
+          >
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+
+          <div class="navbar__hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ======== PROFILE HERO ======== -->
+    <div class="profile-hero">
+      <div class="container">
+        <div class="profile-hero__banner">
+          <div class="profile-hero__avatar-row">
+            <!-- Avatar with initial -->
+            <div class="profile-avatar" id="heroAvatar">
+              US
+              <div class="profile-avatar__edit" title="Alterar foto">
+                <i class="fa-solid fa-camera"></i>
+              </div>
+            </div>
+            <div class="profile-hero__info">
+              <div class="profile-hero__name" id="heroName">Carregando...</div>
+              <div class="profile-hero__email" id="heroEmail">...</div>
+              <div class="profile-hero__badges">
+                <span class="profile-badge" id="heroRoleBadge"
+                  ><i class="fa-solid fa-star"></i> Cliente</span
+                >
+                <span class="profile-badge" id="heroSince"
+                  ><i class="fa-solid fa-calendar"></i> ...</span
+                >
+              </div>
+              <div
+                id="adminPanelBtnContainer"
+                style="display: none; margin-top: 16px"
+              >
+                <a
+                  href="adminPage.html"
+                  class="btn btn--gold"
+                  style="
+                    font-size: 0.85rem;
+                    padding: 8px 16px;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                  "
+                >
+                  <i class="fa-solid fa-shield-halved"></i> Painel de
+                  Administração
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== PROFILE TABS ======== -->
+    <div class="profile-tabs">
+      <div class="container">
+        <div class="profile-tabs__inner" role="tablist">
+          <div
+            class="profile-tab active"
+            onclick="switchPanel('orders')"
+            role="tab"
+            id="tab-orders"
+          >
+            <i class="fa-solid fa-box"></i>
+            <span>Encomendas</span>
+          </div>
+          <div
+            class="profile-tab"
+            onclick="switchPanel('favourites')"
+            role="tab"
+            id="tab-favourites"
+          >
+            <i class="fa-solid fa-heart"></i>
+            <span>Favoritos</span>
+          </div>
+          <div
+            class="profile-tab"
+            onclick="switchPanel('personal')"
+            role="tab"
+            id="tab-personal"
+          >
+            <i class="fa-solid fa-user-pen"></i>
+            <span>Dados Pessoais</span>
+          </div>
+          <div
+            class="profile-tab"
+            onclick="switchPanel('security')"
+            role="tab"
+            id="tab-security"
+          >
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Segurança</span>
+          </div>
+          <div
+            class="profile-tab"
+            onclick="logout()"
+            role="button"
+            style="margin-left: auto; color: var(--danger)"
+          >
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>Sair</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== PROFILE CONTENT ======== -->
+    <main class="profile-content">
+      <div class="container">
+        <!-- ────────────────────────────
+             PANEL: ENCOMENDAS
+        ──────────────────────────── -->
+        <div class="profile-panel active" id="panel-orders">
+          <!-- Stats -->
+          <div class="profile-stats">
+            <div class="stat-card">
+              <div class="stat-card__value" id="statTotalOrders">0</div>
+              <div class="stat-card__label">Total Encomendas</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value" id="statActiveOrders">0</div>
+              <div class="stat-card__label">Em Andamento</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card__value" id="statTotalSpent">0 Kz</div>
+              <div class="stat-card__label">Total Gasto</div>
+            </div>
+          </div>
+
+          <div class="panel-header">
+            <h2 class="panel-title">Histórico de Encomendas</h2>
+            <a
+              href="categPage.html"
+              class="btn btn--outline"
+              style="padding: 10px 20px; font-size: 0.88rem"
+            >
+              <i class="fa-solid fa-plus"></i> Nova Compra
+            </a>
+          </div>
+
+          <div class="orders-list" id="ordersList">
+            <!-- Orders will be rendered here dynamically -->
+          </div>
+        </div>
+
+        <!-- ────────────────────────────
+             PANEL: FAVORITOS
+        ──────────────────────────── -->
+        <div class="profile-panel" id="panel-favourites">
+          <div class="panel-header">
+            <h2 class="panel-title">
+              Os Meus Favoritos
+              <span
+                id="favCount"
+                style="color: var(--text-muted); font-size: 0.9rem"
+                >(0)</span
+              >
+            </h2>
+          </div>
+
+          <div class="fav-grid" id="favGrid">
+            <!-- Favoritos serão carregados dinamicamente -->
+            <div
+              style="
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 2rem;
+                color: var(--text-muted);
+              "
+            >
+              A carregar favoritos...
+            </div>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────
+             PANEL: DADOS PESSOAIS
+        ──────────────────────────── -->
+        <div class="profile-panel" id="panel-personal">
+          <div class="panel-header">
+            <h2 class="panel-title">Dados Pessoais</h2>
+          </div>
+
+          <div class="profile-form">
+            <div class="form-section-title">Informação da Conta</div>
+            <form id="personalForm" novalidate>
+              <div class="profile-form-grid">
+                <div class="form-group">
+                  <label class="form-label" for="firstName">Nome</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-user form-input-icon"></i>
+                    <input
+                      type="text"
+                      id="firstName"
+                      class="form-input"
+                      value="João"
+                      placeholder="Nome"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="lastName">Apelido</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-user form-input-icon"></i>
+                    <input
+                      type="text"
+                      id="lastName"
+                      class="form-input"
+                      value="Silva"
+                      placeholder="Apelido"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">Email</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-envelope form-input-icon"></i>
+                    <input
+                      type="email"
+                      id="email"
+                      class="form-input"
+                      value="joao.silva@email.com"
+                      placeholder="Email"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="phone">Telemóvel</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-phone form-input-icon"></i>
+                    <input
+                      type="tel"
+                      id="phone"
+                      class="form-input"
+                      value="+244 923 456 789"
+                      placeholder="Número"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions" style="margin-bottom: 32px">
+                <button
+                  type="button"
+                  class="btn btn--outline"
+                  style="padding: 10px 24px; font-size: 0.9rem"
+                  onclick="resetForm('personalForm')"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn--gold"
+                  style="padding: 10px 28px; font-size: 0.9rem"
+                >
+                  <i class="fa-solid fa-floppy-disk"></i> Guardar Alterações
+                </button>
+              </div>
+            </form>
+
+            <!-- Addresses Section -->
+            <div
+              class="form-section-title"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <span>Endereços de Entrega</span>
+              <button
+                type="button"
+                class="btn btn--outline"
+                style="padding: 6px 14px; font-size: 0.8rem"
+                onclick="showAddressForm()"
+              >
+                <i class="fa-solid fa-plus"></i> Novo
+              </button>
+            </div>
+
+            <!-- List of Addresses -->
+            <div
+              id="addressesList"
+              style="
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 24px;
+              "
+            >
+              <div
+                style="
+                  text-align: center;
+                  color: var(--text-muted);
+                  font-size: 0.9rem;
+                  padding: 20px;
+                "
+              >
+                Carregando endereços...
+              </div>
+            </div>
+
+            <!-- Add Address Form (Hidden) -->
+            <form
+              id="addressForm"
+              style="
+                display: none;
+                background: var(--bg-surface);
+                border: 1px solid var(--border-subtle);
+                border-radius: 12px;
+                padding: 20px;
+              "
+              novalidate
+            >
+              <h4
+                style="
+                  margin-bottom: 20px;
+                  font-size: 1rem;
+                  font-family: var(--font-heading);
+                  color: var(--text-primary);
+                "
+              >
+                Novo Endereço
+              </h4>
+              <div class="profile-form-grid">
+                <div class="form-group form-group--full">
+                  <label class="form-label" for="newAddress">Morada</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-location-dot form-input-icon"></i>
+                    <input
+                      type="text"
+                      id="newAddress"
+                      class="form-input"
+                      placeholder="Rua, Número, Andar..."
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="newCity">Cidade</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-city form-input-icon"></i>
+                    <input
+                      type="text"
+                      id="newCity"
+                      class="form-input"
+                      placeholder="Ex: Luanda"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="newDistrict"
+                    >Município / Bairro</label
+                  >
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-map form-input-icon"></i>
+                    <input
+                      type="text"
+                      id="newDistrict"
+                      class="form-input"
+                      placeholder="Ex: Talatona"
+                      required
+                    />
+                  </div>
+                </div>
+                <div
+                  class="form-group form-group--full"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-top: 4px;
+                  "
+                >
+                  <input
+                    type="checkbox"
+                    id="newIsDefault"
+                    style="
+                      accent-color: var(--gold);
+                      width: 16px;
+                      height: 16px;
+                      cursor: pointer;
+                    "
+                  />
+                  <label
+                    for="newIsDefault"
+                    style="
+                      font-size: 0.88rem;
+                      font-weight: 500;
+                      color: var(--text-primary);
+                      cursor: pointer;
+                    "
+                    >Definir como endereço principal</label
+                  >
+                </div>
+              </div>
+
+              <div class="form-actions" style="margin-top: 20px">
+                <button
+                  type="button"
+                  class="btn btn--outline"
+                  style="padding: 10px 24px; font-size: 0.9rem"
+                  onclick="hideAddressForm()"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn--gold"
+                  style="padding: 10px 28px; font-size: 0.9rem"
+                >
+                  <i class="fa-solid fa-save"></i> Guardar Endereço
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ────────────────────────────
+             PANEL: SEGURANÇA
+        ──────────────────────────── -->
+        <div class="profile-panel" id="panel-security">
+          <div class="panel-header">
+            <h2 class="panel-title">Segurança da Conta</h2>
+          </div>
+
+          <div class="profile-form">
+            <div class="form-section-title">Alterar Palavra-passe</div>
+            <form id="securityForm" novalidate>
+              <div class="profile-form-grid profile-form-grid--full">
+                <div class="form-group" style="max-width: 480px">
+                  <label class="form-label" for="currentPwd"
+                    >Palavra-passe Atual</label
+                  >
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-lock form-input-icon"></i>
+                    <input
+                      type="password"
+                      id="currentPwd"
+                      class="form-input"
+                      placeholder="••••••••"
+                    />
+                    <span
+                      class="form-pwd-toggle"
+                      onclick="togglePwd('currentPwd', this)"
+                      ><i class="fa-solid fa-eye"></i
+                    ></span>
+                  </div>
+                </div>
+                <div class="form-group" style="max-width: 480px">
+                  <label class="form-label" for="newPwd"
+                    >Nova Palavra-passe</label
+                  >
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-key form-input-icon"></i>
+                    <input
+                      type="password"
+                      id="newPwd"
+                      class="form-input"
+                      placeholder="Mínimo 8 caracteres"
+                    />
+                    <span
+                      class="form-pwd-toggle"
+                      onclick="togglePwd('newPwd', this)"
+                      ><i class="fa-solid fa-eye"></i
+                    ></span>
+                  </div>
+                </div>
+                <div class="form-group" style="max-width: 480px">
+                  <label class="form-label" for="confirmPwd"
+                    >Confirmar Nova Palavra-passe</label
+                  >
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-key form-input-icon"></i>
+                    <input
+                      type="password"
+                      id="confirmPwd"
+                      class="form-input"
+                      placeholder="Repete a nova senha"
+                    />
+                    <span
+                      class="form-pwd-toggle"
+                      onclick="togglePwd('confirmPwd', this)"
+                      ><i class="fa-solid fa-eye"></i
+                    ></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions" style="margin-bottom: 0">
+                <button
+                  type="submit"
+                  class="btn btn--gold"
+                  style="padding: 10px 28px; font-size: 0.9rem"
+                >
+                  <i class="fa-solid fa-shield-halved"></i> Atualizar Senha
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Sessions -->
+          <div class="profile-form" style="margin-top: 24px">
+            <div class="form-section-title">Sessões Ativas</div>
+            <div
+              style="display: flex; flex-direction: column; gap: 12px"
+              id="sessionsList"
+            >
+              <div
+                style="
+                  text-align: center;
+                  font-size: 0.9rem;
+                  color: var(--text-muted);
+                  padding: 16px;
+                "
+              >
+                <i
+                  class="fa-solid fa-circle-notch fa-spin"
+                  style="margin-right: 8px"
+                ></i>
+                A carregar sessões ativas...
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="danger-zone">
+            <div class="danger-zone__title">
+              <i class="fa-solid fa-triangle-exclamation"></i> Zona de Risco
+            </div>
+            <div class="danger-zone__desc">
+              Ao eliminar a tua conta, todos os dados, encomendas e favoritos
+              serão permanentemente apagados. Esta ação é irreversível.
+            </div>
+            <button class="btn--danger" onclick="deleteAccount()">
+              <i class="fa-solid fa-trash"></i> Eliminar Conta
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="footer" id="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div>
+            <div class="footer__brand-name" id="gBrandName">
+              Move <span>Plus</span>
+            </div>
+            <p class="footer__brand-desc" id="gBrandSlogan">
+              A tua loja online de confiança. Perfumes, cremes, roupa e
+              acessórios — tudo ao melhor preço com entrega rápida.
+            </p>
+            <div class="footer__socials">
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgInstagram"
+                title="Instagram"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgFacebook"
+                title="Facebook"
+                ><i class="fa-brands fa-facebook-f"></i
+              ></a>
+              <a
+                href="#"
+                class="footer__social-icon"
+                id="gImgTiktok"
+                title="TikTok"
+                ><i class="fa-brands fa-tiktok"></i
+              ></a>
+              <a
+                href="#"
+                target="_blank"
+                class="footer__social-icon"
+                id="gImgWhatsapp"
+                title="WhatsApp"
+                ><i class="fa-brands fa-whatsapp"></i
+              ></a>
+            </div>
+          </div>
+          <div>
+            <h4 class="footer__col-title">Loja</h4>
+            <a href="categPage.html?cat=perfumes" class="footer__link"
+              >Perfumes</a
+            >
+            <a href="categPage.html?cat=cremes" class="footer__link">Cremes</a>
+            <a href="categPage.html?cat=roupa" class="footer__link">Roupa</a>
+            <a href="categPage.html?cat=acessorios" class="footer__link"
+              >Acessórios</a
+            >
+            <a href="categPage.html?cat=promocoes" class="footer__link"
+              >Promoções</a
+            >
+          </div>
+          <!-- Ajuda <div>
+            <h4 class="footer__col-title">Ajuda</h4>
+            <a href="#" class="footer__link">Como Comprar</a>
+            <a href="#" class="footer__link">Entregas</a>
+            <a href="#" class="footer__link">Trocas e Devoluções</a>
+            <a href="#" class="footer__link">Perguntas Frequentes</a>
+          </div>-->
+          <div>
+            <h4 class="footer__col-title">Contacto</h4>
+            <a href="#" target="_blank" class="footer__link" id="gLinkWhatsapp"
+              ><i
+                class="fa-brands fa-whatsapp"
+                style="margin-right: 6px; color: var(--whatsapp)"
+              ></i
+              ><span id="gTextWhatsapp">+244 999 999 999</span></a
+            >
+            <a href="#" class="footer__link" id="gLinkEmail"
+              ><i class="fa-solid fa-envelope" style="margin-right: 6px"></i
+              ><span id="gTextEmail">info@moveplus.ao</span></a
+            >
+            <a href="#" class="footer__link"
+              ><i class="fa-solid fa-location-dot" style="margin-right: 6px"></i
+              ><span id="gTextLocation">Luanda, Angola</span></a
+            >
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Move Plus. Todos os direitos reservados.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Floating WhatsApp -->
+    <a
+      href="#"
+      target="_blank"
+      class="whatsapp-float"
+      id="gFloatingWhatsapp"
+      title="Contactar via WhatsApp"
+    >
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="../js/toast.js"></script>
+    <script src="../js/safeRedirect.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+      /* ── Tab switching ── */
+      function switchPanel(id) {
+        document
+          .querySelectorAll(".profile-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".profile-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById("panel-" + id).classList.add("active");
+        document.getElementById("tab-" + id).classList.add("active");
+      }
+
+      /* ── Password toggle ── */
+      function togglePwd(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const i = btn.querySelector("i");
+        if (input.type === "password") {
+          input.type = "text";
+          i.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+          input.type = "password";
+          i.classList.replace("fa-eye-slash", "fa-eye");
+        }
+      }
+
+      /* ── Personal form ── */
+      document
+        .getElementById("personalForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          showToast("Dados atualizados com sucesso!", "success");
+        });
+
+      /* ── Security form ── */
+      document
+        .getElementById("securityForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const np = document.getElementById("newPwd").value;
+          const cp = document.getElementById("confirmPwd").value;
+          if (!document.getElementById("currentPwd").value) {
+            showToast("Introduz a senha atual.", "error");
+            return;
+          }
+          if (np.length < 8) {
+            showToast(
+              "A nova senha deve ter pelo menos 8 caracteres.",
+              "error",
+            );
+            return;
+          }
+          if (np !== cp) {
+            showToast("As senhas não coincidem.", "error");
+            return;
+          }
+          showToast("Palavra-passe atualizada!", "success");
+          this.reset();
+        });
+
+      /* ── Cancel / reset ── */
+      function resetForm(id) {
+        document.getElementById(id).reset();
+      }
+
+      /* ── Addresses Logic ── */
+      let currentUser = null; // Guardar utilizador carregado globalmente nesta página para os endereços
+
+      function showAddressForm() {
+        document.getElementById("addressForm").style.display = "block";
+        document.getElementById("addressForm").reset();
+      }
+
+      function hideAddressForm() {
+        document.getElementById("addressForm").style.display = "none";
+      }
+
+      async function loadAddresses() {
+        if (!currentUser) return;
+
+        try {
+          const addresses = await API.getCustomerAddresses(currentUser.id);
+          const list = document.getElementById("addressesList");
+
+          if (addresses.length === 0) {
+            list.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">Ainda não adicionaste nenhum endereço.</div>`;
+            return;
+          }
+
+          let html = "";
+          addresses.forEach((addr) => {
+            const badge = addr.is_default
+              ? `<span style="background: var(--gold-dim); color: var(--gold); font-size: 0.7rem; padding: 3px 8px; border-radius: 12px; font-weight: 700; text-transform: uppercase;">Principal</span>`
+              : "";
+
+            html += `
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px;">
+                <div>
+                  <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                    ${addr.address} ${badge}
+                  </div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted);">
+                    ${addr.district}, ${addr.city}
+                  </div>
+                </div>
+                <button type="button" class="btn--danger" style="padding: 6px 12px; font-size: 0.8rem; border: none; background: rgba(220,38,38,0.1);" onclick="deleteAddress(${addr.id})" title="Remover">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            `;
+          });
+          list.innerHTML = html;
+        } catch (error) {
+          console.error(error);
+          document.getElementById("addressesList").innerHTML =
+            `<div style="color: var(--danger); font-size: 0.85rem; padding: 20px;">Erro ao carregar os endereços.</div>`;
+        }
+      }
+
+      async function deleteAddress(addressId) {
+        if (!(await Toast.confirmDelete("este endereço"))) {
+          return;
+        }
+
+        try {
+          await API.deleteCustomerAddress(currentUser.id, addressId);
+          showToast("Endereço removido com sucesso!", "success");
+          loadAddresses();
+        } catch (error) {
+          console.error(error);
+          showToast("Erro ao remover o endereço.", "error");
+        }
+      }
+
+      document
+        .getElementById("addressForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const addressData = {
+            address: document.getElementById("newAddress").value,
+            city: document.getElementById("newCity").value,
+            district: document.getElementById("newDistrict").value,
+            is_default: document.getElementById("newIsDefault").checked,
+          };
+
+          try {
+            await API.addCustomerAddress(currentUser.id, addressData);
+            showToast("Endereço guardado com sucesso!", "success");
+            hideAddressForm();
+            loadAddresses();
+          } catch (error) {
+            console.error(error);
+            showToast("Erro ao adicionar o endereço.", "error");
+          }
+        });
+
+      /* ── Dynamic Favourites Loading ── */
+      async function loadFavorites() {
+        const favGrid = document.getElementById("favGrid");
+        const favCount = document.getElementById("favCount");
+
+        try {
+          const favorites = await API.getFavorites();
+          favCount.textContent = `(${favorites.length})`;
+
+          if (favorites.length === 0) {
+            favGrid.innerHTML = `
+              <div class="empty-state" style="grid-column: 1 / -1;">
+                <i class="fa-regular fa-heart empty-state__icon"></i>
+                <h3>Nenhum favorito ainda</h3>
+                <p>Explora os nossos produtos e adiciona os teus preferidos!</p>
+                <a href="categPage.html" class="btn btn--gold">Ver Produtos</a>
+              </div>
+            `;
+            return;
+          }
+
+          favGrid.innerHTML = favorites
+            .map((fav) => {
+              const imageUrl = fav.image_url
+                ? fav.image_url.split(",")[0].trim()
+                : "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&q=80";
+
+              return `
+              <div class="fav-card" data-product-id="${fav.product_id}">
+                <a href="productPage.html?id=${fav.product_id}" style="text-decoration:none;color:inherit;">
+                  <div class="fav-card__img-wrap">
+                    <img src="${imageUrl}" alt="${fav.name}" class="fav-card__img" />
+                    <button class="fav-card__remove" title="Remover dos favoritos" onclick="event.preventDefault(); event.stopPropagation(); removeFavFromPanel(${fav.product_id}, this);">
+                      <i class="fa-solid fa-heart-crack"></i>
+                    </button>
+                  </div>
+                  <div class="fav-card__info">
+                    <div class="fav-card__cat">${fav.category_name || "Diversos"}</div>
+                    <div class="fav-card__name">${fav.name}</div>
+                    <div class="fav-card__price">${API.formatPrice(fav.price)}</div>
+                  </div>
+                </a>
+              </div>
+            `;
+            })
+            .join("");
+        } catch (err) {
+          console.error("Erro ao carregar favoritos:", err);
+          favGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--text-muted);">
+              Erro ao carregar favoritos.
+            </div>
+          `;
+        }
+      }
+
+      async function removeFavFromPanel(productId, btn) {
+        const card = btn.closest(".fav-card");
+        card.style.transition = "all 0.3s ease";
+        card.style.opacity = "0";
+        card.style.transform = "scale(0.9)";
+
+        try {
+          await API.removeFavorite(productId);
+          setTimeout(() => {
+            card.remove();
+            // Update count
+            const remaining =
+              document.querySelectorAll("#favGrid .fav-card").length;
+            document.getElementById("favCount").textContent = `(${remaining})`;
+            if (remaining === 0) loadFavorites(); // Reload to show empty state
+          }, 300);
+          showToast("Removido dos favoritos.", "success");
+        } catch (err) {
+          console.error(err);
+          card.style.opacity = "1";
+          card.style.transform = "scale(1)";
+          showToast("Erro ao remover favorito.", "error");
+        }
+      }
+
+      /* ── Dark mode (synced with navbar toggle in main.js) ── */
+      (function () {
+        const saved = localStorage.getItem("moveplus-theme");
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        if (saved === "dark" || (!saved && prefersDark)) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+
+      /* ── Dynamic User Data Loading ── */
+      document.addEventListener("DOMContentLoaded", async () => {
+        const isLoggedIn = document.cookie.includes("is_logged_in=1");
+        if (!isLoggedIn) {
+          safeRedirect("loginPage.html");
+          return;
+        }
+
+        const userObj = await API.getLoggedUser();
+        if (!userObj) {
+          await fetch(`${API_BASE_URL}/customers/logout`, {
+            method: "POST",
+            credentials: "same-origin",
+          });
+          safeRedirect("loginPage.html");
+          return;
+        }
+
+        currentUser = userObj; // Guardar globalmente
+        const customer = userObj; // /me já devolve os detalhes corretos
+        const orders = await API.getCustomerOrders(userObj.id);
+
+        // Render profile hero
+        document.getElementById("heroName").textContent = customer.name;
+        document.getElementById("heroEmail").textContent =
+          customer.email || customer.phone;
+        const initials = customer.name.substring(0, 2).toUpperCase();
+        document.getElementById("heroAvatar").innerHTML =
+          `${initials}<div class="profile-avatar__edit" title="Alterar foto"><i class="fa-solid fa-camera"></i></div>`;
+        const dateStr = new Date(customer.created_at).toLocaleDateString(
+          "pt-PT",
+          { month: "short", year: "numeric" },
+        );
+        document.getElementById("heroSince").innerHTML =
+          `<i class="fa-solid fa-calendar"></i> Membro desde ${dateStr}`;
+
+        // Verify Admin Role to show the Dashboard Button
+        if (customer.role === "admin") {
+          document.getElementById("heroRoleBadge").innerHTML =
+            `<i class="fa-solid fa-shield-halved"></i> Administrador`;
+          document.getElementById("heroRoleBadge").style.background =
+            "var(--gold-dim)";
+          document.getElementById("heroRoleBadge").style.color = "var(--gold)";
+          document.getElementById("adminPanelBtnContainer").style.display =
+            "block";
+        }
+
+        // Fill form
+        const names = customer.name.split(" ");
+        document.getElementById("firstName").value = names[0] || "";
+        document.getElementById("lastName").value =
+          names.slice(1).join(" ") || "";
+        document.getElementById("email").value = customer.email || "";
+        document.getElementById("phone").value = customer.phone || "";
+
+        // Render Stats
+        document.getElementById("statTotalOrders").textContent = orders.length;
+        const activeOrders = orders.filter(
+          (o) => o.status !== "entregue" && o.status !== "cancelado",
+        ).length;
+        document.getElementById("statActiveOrders").textContent = activeOrders;
+
+        const totalSpent = orders.reduce(
+          (acc, curr) => acc + parseFloat(curr.total || 0),
+          0,
+        );
+        document.getElementById("statTotalSpent").textContent =
+          API.formatPrice(totalSpent);
+
+        // Render Orders
+        const listContainer = document.getElementById("ordersList");
+        if (orders.length === 0) {
+          listContainer.innerHTML = `
+            <div class="empty-state">
+              <i class="fa-solid fa-box-open empty-state__icon"></i>
+              <h3>Nenhuma encomenda encontrada</h3>
+              <p>Ainda não realizaste nenhuma encomenda.</p>
+              <a href="../index.html#produtos" class="btn btn--gold">Ver Produtos</a>
+            </div>
+          `;
+        } else {
+          listContainer.innerHTML = orders.map(renderOrderCard).join("");
+        }
+
+        // Carregar endereços
+        loadAddresses();
+
+        // Carregar favoritos
+        loadFavorites();
+
+        // Carregar sessões ativas
+        loadSessions(customer.id);
+      });
+
+      function renderOrderCard(order) {
+        let statusClass = "order-status--processing";
+        let statusIcon = "fa-hourglass-half";
+        let statusText = "A Processar";
+
+        if (order.status === "entregue") {
+          statusClass = "order-status--delivered";
+          statusIcon = "fa-circle-check";
+          statusText = "Entregue";
+        } else if (order.status === "enviado") {
+          statusClass = "order-status--transit";
+          statusIcon = "fa-truck";
+          statusText = "Em Trânsito";
+        } else if (order.status === "cancelado") {
+          statusClass = "order-status--cancelled";
+          statusIcon = "fa-circle-xmark";
+          statusText = "Cancelado";
+        }
+
+        const date = new Date(order.created_at).toLocaleDateString("pt-PT", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+
+        return `
+          <div class="order-card">
+            <div class="order-icon"><i class="fa-solid fa-box-open"></i></div>
+            <div>
+              <div class="order-info__id">#${order.id}</div>
+              <div class="order-info__name">${order.items_text || "Produtos vários"}</div>
+              <div class="order-info__date">
+                <i class="fa-regular fa-clock" style="margin-right: 4px"></i>${date}
+              </div>
+            </div>
+            <div class="order-meta">
+              <div class="order-meta__price">${API.formatPrice(order.total)}</div>
+              <span class="order-status ${statusClass}"><i class="fa-solid ${statusIcon}"></i> ${statusText}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      async function loadSessions(customerId) {
+        const container = document.getElementById("sessionsList");
+        try {
+          const sessions = await API.getTrustedDevices(customerId);
+          if (!sessions || sessions.length === 0) {
+            container.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding: 16px;">Nenhuma sessão ativa encontrada.</div>`;
+            return;
+          }
+
+          container.innerHTML = sessions
+            .map((session, index) => {
+              let browser = "Desconhecido";
+              let os = "Desconhecido";
+              let icon = "fa-desktop";
+
+              if (session.user_agent) {
+                const ua = session.user_agent.toLowerCase();
+                if (ua.includes("safari") && !ua.includes("chrome"))
+                  browser = "Safari";
+                else if (ua.includes("chrome")) browser = "Chrome";
+                else if (ua.includes("firefox")) browser = "Firefox";
+                else if (ua.includes("edge")) browser = "Edge";
+
+                if (ua.includes("iphone") || ua.includes("ipad")) {
+                  os = "iOS";
+                  icon = "fa-mobile-screen";
+                } else if (ua.includes("android")) {
+                  os = "Android";
+                  icon = "fa-mobile-screen";
+                } else if (ua.includes("mac os")) os = "macOS";
+                else if (ua.includes("windows")) os = "Windows";
+                else if (ua.includes("linux")) os = "Linux";
+              }
+
+              const dateStr = new Date(session.last_used_at).toLocaleDateString(
+                "pt-PT",
+                {
+                  day: "2-digit",
+                  month: "short",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                },
+              );
+              const locationStr =
+                session.country !== "XX" && session.country !== "LOCAL"
+                  ? session.country
+                  : "Local desconhecido";
+
+              // Assume the most recently used (index 0) is the current one if we want a highlight,
+              // though actual current session might be different. We render a "Atual" badge for index 0 for UI polish.
+              const isCurrent = index === 0;
+              const badgeHtml = isCurrent
+                ? `<span style="font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; background: var(--gold-dim); color: var(--gold);">Sessão atual</span>`
+                : "";
+
+              return `
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 14px">
+                  <div style="width: 40px; height: 40px; border-radius: 12px; background: ${isCurrent ? "var(--gold-dim)" : "var(--bg-surface)"}; display: flex; align-items: center; justify-content: center; color: ${isCurrent ? "var(--gold)" : "var(--text-muted)"};">
+                    <i class="fa-solid ${icon}"></i>
+                  </div>
+                  <div>
+                    <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">
+                      ${browser} · ${os} ${badgeHtml}
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-muted)">
+                      ${locationStr} · ${dateStr}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="btn--danger"
+                  style="padding: 6px 14px; font-size: 0.78rem"
+                  onclick="removeSession(${session.id}, ${customerId}, this)"
+                >
+                  Terminar
+                </button>
+              </div>
+            `;
+            })
+            .join("");
+        } catch (err) {
+          console.error("Erro ao carregar sessões:", err);
+          container.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--danger); padding: 16px;">Erro ao carregar sessões ativas.</div>`;
+        }
+      }
+
+      async function removeSession(deviceId, customerId, btn) {
+        const ok = await Toast.confirm(
+          "Tens a certeza que desejas terminar esta sessão ativa?",
+          {
+            title: "Terminar Sessão",
+            icon: "⚠️",
+            yesText: "Sim, terminar",
+            noText: "Cancelar",
+          },
+        );
+        if (!ok) return;
+
+        const row = btn.closest("div[style*='flex-wrap: wrap']");
+        row.style.opacity = "0.5";
+        btn.disabled = true;
+
+        try {
+          await API.removeTrustedDevice(deviceId, customerId);
+          showToast("Sessão terminada com sucesso.", "success");
+          row.remove();
+
+          const container = document.getElementById("sessionsList");
+          if (container.children.length === 0) {
+            container.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding: 16px;">Nenhuma sessão ativa encontrada.</div>`;
+          }
+        } catch (err) {
+          console.error(err);
+          showToast("Erro ao terminar sessão.", "error");
+          row.style.opacity = "1";
+          btn.disabled = false;
+        }
+      }
+
+      async function logout() {
+        try {
+          await fetch(`${API_BASE_URL}/customers/logout`, {
+            method: "POST",
+            credentials: "same-origin",
+          });
+        } catch (e) {}
+        showToast("Sessão terminada.", "success");
+        setTimeout(() => {
+          safeRedirect("loginPage.html");
+        }, 1200);
+      }
+
+      async function deleteAccount() {
+        if (!currentUser) {
+          showToast("Erro ao identificar o utilizador.", "error");
+          return;
+        }
+
+        const ok = await Toast.confirm(
+          "Tens a certeza absoluta que desejas eliminar a tua conta? Esta ação é irreversível.",
+          {
+            title: "Eliminar Conta",
+            icon: "⚠️",
+            yesText: "Sim, eliminar",
+            noText: "Cancelar",
+          },
+        );
+        if (!ok) return;
+
+        try {
+          await API.deleteCustomer(currentUser.id);
+          await fetch(`${API_BASE_URL}/customers/logout`, {
+            method: "POST",
+            credentials: "same-origin",
+          });
+          showToast("Conta eliminada com sucesso.", "success");
+          setTimeout(() => {
+            safeRedirect("loginPage.html");
+          }, 1500);
+        } catch (err) {
+          console.error(err);
+          showToast("Erro ao eliminar a conta.", "error");
+        }
+      }
+    </script>
+  </body>
+</html>
