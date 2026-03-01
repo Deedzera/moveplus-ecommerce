@@ -1211,7 +1211,27 @@
 
     <!-- OTP Modal -->
     <div class="otp-modal" id="otpModal">
-      <div class="otp-modal__content">
+      <div class="otp-modal__content" style="position: relative">
+        <!-- Botão Fechar -->
+        <button
+          class="modal-close"
+          id="closeOtpModalBtn"
+          style="
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            padding: 5px;
+          "
+        >
+          &times;
+        </button>
+
         <h3 class="otp-modal__title">Verificação de Email</h3>
         <p class="otp-modal__text">
           Introduz os 6 dígitos que enviámos para
@@ -1630,6 +1650,11 @@
         currentPendingToken = null;
         otpInputs.forEach((input) => (input.value = ""));
       }
+
+      // Fechar Modal OTP no botão X
+      document
+        .getElementById("closeOtpModalBtn")
+        .addEventListener("click", closeOtpModal);
 
       // Handle OTP input jumping
       otpInputs.forEach((input, index) => {
