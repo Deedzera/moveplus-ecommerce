@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initVariationButtons();
   initNavbarScroll();
   initSettings();
+  initSearchAutocomplete();
 });
 
 /* ---------- Admin Icon Injector ---------- */
@@ -459,3 +460,121 @@ const Cart = {
 
 // Update badge on load
 Cart.updateBadge();
+
+/* ---------- Search Autocomplete ---------- */
+function initSearchAutocomplete() {
+  const searchContainers = document.querySelectorAll(".navbar__search");
+  if (!searchContainers.length) return;
+
+  searchContainers.forEach((container) => {
+    const input = container.querySelector('input[type="text"]');
+    if (!input) return;
+
+    // Create dropdown container
+    const resultsBox = document.createElement("div");
+    resultsBox.className = "search-autocomplete-results";
+    resultsBox.style.display = "none";
+    container.appendChild(resultsBox);
+
+    let debounceTimer;
+
+    input.addEventListener("input", (e) => {
+      const query = e.target.value.trim();
+
+      clearTimeout(debounceTimer);
+
+      if (query.length < 2) {
+        resultsBox.style.display = "none";
+        return;
+      }
+
+      debounceTimer = setTimeout(async () => {
+        try {
+          // Add loading state
+          resultsBox.innerHTML = '<div class="search-autocomplete-empty"><i class="fa-solid fa-spinner fa-spin"></i> A procurar...</div>';
+          resultsBox.style.display = "flex";
+
+          const products = await API.getProducts({ search: query, status: "ativo" });
+          resultsBox.innerHTML = "";
+
+          if (products && products.length > 0) {
+            const isRoot = !window.location.pathname.includes("/pages/");
+            const pagesPrefix = isRoot ? "pages/" : "";
+
+            // Show up to 5 results
+            const topResults = products.slice(0, 5);
+            
+            topResults.forEach(p => {
+              const item = document.createElement("div");
+              item.className = "search-autocomplete-item";
+              
+              const imgUrl = p.images && p.images[0] ? p.images[0].image_url : (isRoot ? 'assets/placeholder.jpg' : '../assets/placeholder.jpg');
+              const priceFmt = (p.price || 0).toLocaleString("pt-PT") + " Kz";
+
+              item.innerHTML = `
+                <img src="${imgUrl}" alt="${p.name}">
+                <div class="search-autocomplete-info">
+                  <span class="search-autocomplete-title">${p.name}</span>
+                  <span class="search-autocomplete-price">${priceFmt}</span>
+                </div>
+              `;
+
+              item.addEventListener("click", () => {
+                window.location.href = `${pagesPrefix}productPage.html?slug=${p.slug}`;
+              });
+
+              resultsBox.appendChild(item);
+            });
+            
+            // "Ver todos os resultados" link
+            if (products.length > 5) {
+               const viewAll = document.createElement("div");
+               viewAll.className = "search-autocomplete-item";
+               viewAll.style.justifyContent = "center";
+               viewAll.style.color = "var(--gold)";
+               viewAll.style.fontWeight = "600";
+               viewAll.innerHTML = `Ver todos (${products.length})`;
+               viewAll.addEventListener("click", () => {
+                 window.location.href = `${pagesPrefix}categPage.html?search=${encodeURIComponent(query)}`;
+               });
+               resultsBox.appendChild(viewAll);
+            }
+
+          } else {
+            resultsBox.innerHTML = '<div class="search-autocomplete-empty">Nenhum produto encontrado.</div>';
+          }
+        } catch (err) {
+          console.error("Erro no autocomplete:", err);
+          resultsBox.style.display = "none";
+        }
+      }, 350); // 350ms debounce
+    });
+
+    // Close when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!container.contains(e.target)) {
+        resultsBox.style.display = "none";
+      }
+    });
+
+    // Reopen when focusing if there's text
+    input.addEventListener("focus", () => {
+      if (input.value.trim().length >= 2 && resultsBox.innerHTML !== "") {
+        resultsBox.style.display = "flex";
+      }
+    });
+    
+    // Press enter to search
+    input.addEventListener("keypress", (e) => {
+       if (e.key === "Enter") {
+         const query = e.target.value.trim();
+         if (query) {
+            const isRoot = !window.location.pathname.includes("/pages/");
+            const pagesPrefix = isRoot ? "pages/" : "";
+            window.location.href = `${pagesPrefix}categPage.html?search=${encodeURIComponent(query)}`;
+         }
+       }
+    });
+  });
+}
+

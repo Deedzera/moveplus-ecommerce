@@ -332,6 +332,93 @@ button {
   margin-right: 10px;
 }
 
+/* Autocomplete Dropdown */
+.navbar__search {
+  position: relative; /* important for absolute positioning of dropdown */
+}
+
+.search-autocomplete-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  box-shadow: var(--shadow-elevated);
+  max-height: 350px;
+  overflow-y: auto;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-autocomplete-results::-webkit-scrollbar {
+  width: 6px;
+}
+.search-autocomplete-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+.search-autocomplete-results::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 10px;
+}
+
+.search-autocomplete-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.2s ease;
+}
+.search-autocomplete-item:last-child {
+  border-bottom: none;
+}
+.search-autocomplete-item:hover {
+  background: var(--bg-surface);
+}
+
+.search-autocomplete-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.search-autocomplete-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-autocomplete-title {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search-autocomplete-price {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.search-autocomplete-empty {
+  padding: 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
 /* Hamburger */
 .navbar__hamburger {
   display: none;
