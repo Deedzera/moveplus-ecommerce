@@ -32,16 +32,16 @@ const storage = new CloudinaryStorage({
 
 // ─── Filtro de tipo de ficheiro ────────────
 function fileFilter(req, file, cb) {
-  const ext  = file.originalname.split(".").pop().toLowerCase();
   const mime = file.mimetype;
+  // Na Vercel, o originalname pode vir sem extensão em alguns casos de FormData
+  // Por isso, validamos prioritariamente o mimetype.
   const valid =
-    ALLOWED_FORMATS.includes(ext) &&
-    (mime.startsWith("image/") || mime.startsWith("video/"));
+    mime.startsWith("image/") || mime.startsWith("video/");
 
   if (!valid) {
     return cb(
       new Error(
-        `Tipo de ficheiro inválido. Aceites: ${ALLOWED_FORMATS.join(", ")}`
+        `Tipo de ficheiro inválido. Aceites: Imagens e Vídeos`
       ),
       false
     );
