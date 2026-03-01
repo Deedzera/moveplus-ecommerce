@@ -1587,10 +1587,10 @@
               '<i class="fa-solid fa-user-plus"></i> Criar Conta Grátis';
             btn.disabled = false;
 
-            showToast("Conta criada! Verifica o teu email.", "success");
+            showToast("Conta recebida! Verifica o teu email.", "success");
 
-            // Abrir modal OTP para confirmar email
-            openOtpModal(res.customer?.email || email);
+            // Abrir modal OTP para confirmar email (enviamos o token JWT de volta)
+            openOtpModal(res.customer?.email || email, false, res.pendingToken);
           } catch (err) {
             btn.innerHTML =
               '<i class="fa-solid fa-user-plus"></i> Criar Conta Grátis';
@@ -1609,10 +1609,16 @@
       const otpInputs = document.querySelectorAll(".otp-input");
       let currentOtpEmail = null;
       let currentRememberMe = false;
+      let currentPendingToken = null; // Guardar token de registo pendente
 
-      function openOtpModal(email, rememberMeFlag = false) {
+      function openOtpModal(
+        email,
+        rememberMeFlag = false,
+        pendingToken = null,
+      ) {
         currentOtpEmail = email;
         currentRememberMe = rememberMeFlag;
+        currentPendingToken = pendingToken;
         document.getElementById("otpEmailLabel").textContent = email;
         otpModal.classList.add("show");
         otpInputs[0].focus();
@@ -1621,6 +1627,7 @@
       function closeOtpModal() {
         otpModal.classList.remove("show");
         currentOtpEmail = null;
+        currentPendingToken = null;
         otpInputs.forEach((input) => (input.value = ""));
       }
 
@@ -1657,12 +1664,17 @@
           btn.disabled = true;
 
           try {
-            // Verifica o OTP (novo param: rememberMe)
-            const res = await API.verifyOTP({
+            // Verifica o OTP (novo param: rememberMe e pendingToken)
+            const payload = {
               email: currentOtpEmail,
               otp: otpCode,
               rememberMe: currentRememberMe,
-            });
+            };
+            if (currentPendingToken) {
+              payload.pendingToken = currentPendingToken;
+            }
+
+            const res = await API.verifyOTP(payload);
 
             // Guardar no localstorage
             localStorage.setItem(
@@ -1705,7 +1717,14 @@
         .addEventListener("click", async function (e) {
           e.preventDefault();
           try {
-            await API.resendOTP({ email: currentOtpEmail });
+            const payload = { email: currentOtpEmail };
+            if (currentPendingToken) {
+              payload.pendingToken = currentPendingToken;
+            }
+            const res = await API.resendOTP(payload);
+            if (res.pendingToken) {
+              currentPendingToken = res.pendingToken; // Atualiza o token caso o backend o tenha renovado
+            }
             showToast("Novo código enviado!", "success");
           } catch (err) {
             showToast(err.message || "Erro ao reenviar código.", "error");

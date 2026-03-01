@@ -125,25 +125,20 @@ router.post("/", async (req, res) => {
 
     // ── Gerar OTP ─────────────────────────
     const otpCode      = generateOTP();
-    const otpExpiresAt = new Date(Date.now() + 15 * 60000); // 15 min
+    const otpExpiresAt = new Date(Date.now() + 15 * 60000).getTime(); // 15 min em ms
 
-    // ── Inserir cliente ───────────────────
-    const insertQ = `
-      INSERT INTO customers
-        (name, email, phone, password_hash, is_verified, otp_code, otp_expires_at)
-      VALUES ($1, $2, $3, $4, FALSE, $5, $6)
-      RETURNING *
-    `;
-    const result = await pool.query(insertQ, [
+    // ── Criar Token de Registo Pendente ───
+    const pendingData = {
       name,
-      email.toLowerCase(),
-      phone || null,
+      email: email.toLowerCase(),
+      phone: phone || null,
       password_hash,
       otpCode,
       otpExpiresAt
-    ]);
-
-    const newCustomer = result.rows[0];
+    };
+    
+    // Gerar um JWT que expira em 15 minutos com os dados do utilizador
+    const pendingToken = jwt.sign(pendingData, JWT_SECRET, { expiresIn: '15m' });
 
     // ── Enviar email com OTP ──────────────
     const mailResult = await sendOTPEmail(email, otpCode, name);
@@ -152,17 +147,11 @@ router.post("/", async (req, res) => {
     }
 
     res.status(201).json({
-      message: "Conta criada! Verifica o teu email para activar a conta.",
-      customer: safeCustomer(newCustomer)
+      message: "Conta recebida! Verifica o teu email para activar a conta.",
+      pendingToken, // Devolvemos o token para o frontend enviar de volta na verificação
+      customer: { email: email.toLowerCase(), name } // Apenas para display
     });
   } catch (err) {
-    // ── Fallback caso ocorra race condition ──
-    if (err.constraint === 'customers_email_key' || (err.message && err.message.includes('customers_email_key'))) {
-      return res.status(409).json({ error: "Já existe uma conta com este email" });
-    }
-    if (err.constraint === 'customers_phone_key' || (err.message && err.message.includes('customers_phone_key'))) {
-      return res.status(409).json({ error: "Este número de telefone já está associado a outra conta" });
-    }
     console.error("Erro ao criar cliente:", err.message);
     res.status(500).json({ error: "Erro interno do servidor" });
   }
@@ -309,10 +298,94 @@ router.post("/login", async (req, res) => {
 // ══════════════════════════════════════════
 router.post("/verify-otp", async (req, res) => {
   try {
-    const { email, otp, rememberMe } = req.body;
+    const { email, otp, rememberMe, pendingToken } = req.body;
 
-    if (!email || !otp) {
-      return res.status(400).json({ error: "Email e OTP são obrigatórios" });
+    if (!otp) {
+      return res.status(400).json({ error: "O código OTP é obrigatório" });
+    }
+
+    // ── Novo Fluxo: Verificação de Registo via JWT ──
+    if (pendingToken) {
+      try {
+        // Verificar o token temporário
+        const decoded = jwt.verify(pendingToken, JWT_SECRET);
+
+        // Validar se o OTP inserido corresponde ao que está no token
+        if (decoded.otpCode !== otp.trim()) {
+          return res.status(400).json({ error: "Código OTP incorreto" });
+        }
+
+        // Verificar expiração adicional (caso o JWT não tenha expirado por alguma razão)
+        if (decoded.otpExpiresAt < Date.now()) {
+            return res.status(400).json({ error: "O código OTP expirou." });
+        }
+
+        // ── Inserir cliente definitivamente na Base de Dados ──
+        const insertQ = `
+          INSERT INTO customers
+            (name, email, phone, password_hash, is_verified, session_version)
+          VALUES ($1, $2, $3, $4, TRUE, 1)
+          RETURNING *
+        `;
+        const insertResult = await pool.query(insertQ, [
+          decoded.name,
+          decoded.email,
+          decoded.phone,
+          decoded.password_hash
+        ]);
+
+        const finalCustomer = insertResult.rows[0];
+
+        // ── Gerar Sessão de Login (Cookies) ──
+        const tokenDuration = rememberMe ? "30d" : "1d";
+        const cookieMaxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+
+        const token = jwt.sign(
+          { id: finalCustomer.id, email: finalCustomer.email, role: finalCustomer.role, sv: finalCustomer.session_version },
+          JWT_SECRET,
+          { expiresIn: tokenDuration }
+        );
+
+        res.cookie("move_auth_token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
+          maxAge: cookieMaxAge
+        });
+        res.cookie("is_logged_in", "1", {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: cookieMaxAge
+        });
+
+        return res.json({
+          message: "Conta criada e verificada com sucesso!",
+          customer: safeCustomer(finalCustomer),
+          otp_passed: true
+        });
+
+      } catch (err) {
+        if (err.name === 'TokenExpiredError') {
+           return res.status(400).json({ error: "O tempo para verificar a conta expirou. Por favor, regista-te novamente." });
+        }
+        // Tratamento de race conditions (tentou verificar 2 vezes ao mesmo tempo)
+        if (err.constraint === 'customers_email_key' || (err.message && err.message.includes('customers_email_key'))) {
+          // Já existe
+          const checkExists = await pool.query("SELECT * FROM customers WHERE email = $1", [email.toLowerCase()]);
+          if (checkExists.rows.length > 0 && checkExists.rows[0].is_verified) {
+             return res.status(400).json({ error: "Esta conta já foi verificada." });
+          }
+        }
+
+        console.error("Erro ao verificar token de registo:", err);
+        return res.status(400).json({ error: "Sessão de registo inválida ou expirada." });
+      }
+    }
+
+    // ── Fluxo Existente: Verificação de OTP de Login / Reenvio ──
+    if (!email) {
+      return res.status(400).json({ error: "Email é obrigatório neste contexto" });
     }
 
     const result = await pool.query(
@@ -387,7 +460,60 @@ router.post("/verify-otp", async (req, res) => {
 // ══════════════════════════════════════════
 router.post("/resend-otp", async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, pendingToken } = req.body;
+    
+    // ── Novo Fluxo: Reenvio de OTP para Registo via JWT ──
+    if (pendingToken) {
+       try {
+         // Verificar o token (ignorando expiração para permitir reenvio mesmo se o OTP expirou)
+         const decoded = jwt.verify(pendingToken, JWT_SECRET, { ignoreExpiration: true });
+         
+         // Validar que o email coincide por segurança
+         if (decoded.email !== email.toLowerCase()) {
+            return res.status(400).json({ error: "Email não corresponde ao registo pendente." });
+         }
+
+         // Rate limit simples baseado no token: se o OTP anterior ainda for válido por > 14 mins
+         const msSinceIssued = Date.now() - (decoded.otpExpiresAt - 15 * 60000);
+         if (msSinceIssued < 60000) {
+            return res.status(429).json({
+              error: `Aguarda ${Math.ceil(60 - (msSinceIssued/1000))} segundos antes de reenviar.`
+            });
+         }
+
+         // Gerar novo OTP
+         const newOtp       = generateOTP();
+         const newExpiresAt = new Date(Date.now() + 15 * 60000).getTime();
+
+         // Criar novo token
+         const newPendingData = {
+           ...decoded,
+           otpCode: newOtp,
+           otpExpiresAt: newExpiresAt
+         };
+         delete newPendingData.iat;
+         delete newPendingData.exp;
+
+         const newPendingToken = jwt.sign(newPendingData, JWT_SECRET, { expiresIn: '15m' });
+
+         // Enviar email
+         const mailResult = await sendOTPEmail(email, newOtp, decoded.name);
+         if (!mailResult.success) {
+           return res.status(500).json({ error: "Não foi possível enviar o email. Tenta novamente." });
+         }
+
+         return res.json({ 
+           message: "Novo código enviado com sucesso!",
+           pendingToken: newPendingToken 
+         });
+
+       } catch (err) {
+         console.error("Erro ao reenviar OTP de registo:", err);
+         return res.status(400).json({ error: "Sessão de registo inválida. Por favor, regista-te novamente." });
+       }
+    }
+
+    // ── Fluxo Existente: Reenvio de OTP de Login ──
     if (!email) {
       return res.status(400).json({ error: "Email é obrigatório" });
     }
