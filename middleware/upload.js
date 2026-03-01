@@ -2,125 +2,182 @@
    MOVE PLUS — Middleware de Upload (Multer + Cloudinary)
    ============================================ */
 
-const multer  = require("multer");
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const streamifier = require("streamifier");
+const multer = require("multer");
 const cloudinary = require("../config/cloudinary");
 
 // ─── Tipos permitidos ──────────────────────
 const ALLOWED_FORMATS = ["jpg", "jpeg", "png", "webp", "mp4"];
-const MAX_SIZE_MB      = 10;
-
-// ─── Storage: envia directamente para o Cloudinary ───
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: async (req, file) => {
-    // Detectar resource_type (vídeo ou imagem)
-    const isVideo     = file.mimetype.startsWith("video/");
-    const resourceType = isVideo ? "video" : "image";
-
-    return {
-      folder:        "moveplus/products",
-      resource_type: resourceType,
-      allowed_formats: ALLOWED_FORMATS,
-      // Transformações automáticas para imagens
-      transformation: isVideo
-        ? []
-        : [{ width: 1200, height: 1200, crop: "limit", quality: "auto" }],
-    };
-  },
-});
+const MAX_SIZE_MB = 10;
 
 // ─── Filtro de tipo de ficheiro ────────────
 function fileFilter(req, file, cb) {
   const mime = file.mimetype;
-  // Na Vercel, o originalname pode vir sem extensão em alguns casos de FormData
-  // Por isso, validamos prioritariamente o mimetype.
-  const valid =
-    mime.startsWith("image/") || mime.startsWith("video/");
+  const valid = mime.startsWith("image/") || mime.startsWith("video/");
 
   if (!valid) {
     return cb(
-      new Error(
-        `Tipo de ficheiro inválido. Aceites: Imagens e Vídeos`
-      ),
+      new Error(`Tipo de ficheiro inválido. Aceites: Imagens e Vídeos`),
       false
     );
   }
   cb(null, true);
 }
 
-// ─── Instância do multer ───────────────────
+// ─── Instância do multer COM MEMÓRIA (Vercel Fix) ───
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   fileFilter,
-  limits: { fileSize: MAX_SIZE_MB * 1024 * 1024 }, // 10 MB em bytes
+  limits: { fileSize: MAX_SIZE_MB * 1024 * 1024 }, // 10 MB
 });
 
-// ─── Middleware com tratamento de erros ───
-function _wrapMulter(multerMiddleware) {
-  return (req, res, next) => {
-    multerMiddleware(req, res, (err) => {
-      if (!err) return next();
-
-      if (err instanceof multer.MulterError) {
-        if (err.code === "LIMIT_FILE_SIZE") {
-          return res
-            .status(400)
-            .json({ error: `Ficheiro muito grande. Máximo: ${MAX_SIZE_MB}MB` });
+// ─── Helper de Upload para Cloudinary ───
+const uploadBufferToCloudinary = (buffer, folder, isVideo = false) => {
+  return new Promise((resolve, reject) => {
+    let uploadOptions = {
+      folder: folder,
+      resource_type: isVideo ? "video" : "image",
+    };
+    if (!isVideo) {
+      uploadOptions.transformation = [
+        { width: 1200, height: 1200, crop: "limit", quality: "auto" },
+      ];
+    }
+    const cld_upload_stream = cloudinary.uploader.upload_stream(
+      uploadOptions,
+      (error, result) => {
+        if (error) {
+          console.error("Cloudinary Stream Error:", error);
+          reject(error);
+        } else {
+          resolve(result);
         }
-        if (err.code === "LIMIT_FILE_COUNT") {
-          return res
-            .status(400)
-            .json({ error: "Demasiados ficheiros. Máximo: 10 por produto." });
-        }
-        console.error("Erro do multer:", err.message);
-        return res.status(400).json({ error: "Ocorreu um erro ao processar o upload do ficheiro." });
       }
+    );
+    streamifier.createReadStream(buffer).pipe(cld_upload_stream);
+  });
+};
 
-      // Erros personalizados (tipo inválido, etc.)
-      console.error("Erro personalizado no upload:", err.message);
-      return res.status(400).json({ error: "Ocorreu um erro com o ficheiro. Verifica o formato e tenta novamente." });
+const uploadBufferForSettingsCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const cld_upload_stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "moveplus/settings",
+        resource_type: "image",
+        transformation: [
+          { width: 1920, height: 1080, crop: "limit", quality: "auto" },
+        ],
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(cld_upload_stream);
+  });
+};
+
+// ─── Wrapper Multer + Cloudinary ───
+function uploadSingle(fieldName) {
+  return async (req, res, next) => {
+    upload.single(fieldName)(req, res, async (err) => {
+      if (err) return handleMulterError(err, res);
+      if (!req.file) return next();
+
+      try {
+        const isVideo = req.file.mimetype.startsWith("video/");
+        const result = await uploadBufferToCloudinary(
+          req.file.buffer,
+          "moveplus/products",
+          isVideo
+        );
+        req.file.path = result.secure_url; // Simulando comportamento do storage original
+        next();
+      } catch (uploadError) {
+        return res
+          .status(500)
+          .json({ error: "Erro ao fazer upload para o Cloudinary" });
+      }
     });
   };
 }
 
-// Upload de ficheiro único
-function uploadSingle(fieldName) {
-  return _wrapMulter(upload.single(fieldName));
-}
-
-// Upload de múltiplos ficheiros (máx. 10) no mesmo campo
 function uploadArray(fieldName, maxCount = 10) {
-  return _wrapMulter(upload.array(fieldName, maxCount));
+  return async (req, res, next) => {
+    upload.array(fieldName, maxCount)(req, res, async (err) => {
+      if (err) return handleMulterError(err, res);
+      if (!req.files || req.files.length === 0) return next();
+
+      try {
+        const uploadPromises = req.files.map((file) => {
+          const isVideo = file.mimetype.startsWith("video/");
+          return uploadBufferToCloudinary(
+            file.buffer,
+            "moveplus/products",
+            isVideo
+          ).then((result) => {
+            file.path = result.secure_url;
+          });
+        });
+        await Promise.all(uploadPromises);
+        next();
+      } catch (uploadError) {
+        console.error(uploadError);
+        return res
+          .status(500)
+          .json({ error: "Erro ao transferir ficheiros para o servidor." });
+      }
+    });
+  };
 }
 
-// ─── Storage separado para imagens das settings (hero / login) ───
-const settingsStorage = new CloudinaryStorage({
-  cloudinary,
-  params: async (req, file) => {
-    return {
-      folder:           "moveplus/settings",
-      resource_type:    "image",
-      allowed_formats:  ["jpg", "jpeg", "png", "webp"],
-      transformation:   [{ width: 1920, height: 1080, crop: "limit", quality: "auto" }],
-    };
-  },
-});
-
-const settingsUpload = multer({
-  storage: settingsStorage,
-  fileFilter,
-  limits: { fileSize: MAX_SIZE_MB * 1024 * 1024 },
-});
-
-// Middleware para upload de imagens das settings (hero + login)
 function uploadSettingsImages() {
-  return _wrapMulter(
-    settingsUpload.fields([
-      { name: "hero_image",  maxCount: 1 },
+  return async (req, res, next) => {
+    upload.fields([
+      { name: "hero_image", maxCount: 1 },
       { name: "login_image", maxCount: 1 },
-    ])
-  );
+    ])(req, res, async (err) => {
+      if (err) return handleMulterError(err, res);
+
+      try {
+        if (req.files) {
+          if (req.files["hero_image"] && req.files["hero_image"][0]) {
+            const result = await uploadBufferForSettingsCloudinary(
+              req.files["hero_image"][0].buffer
+            );
+            req.files["hero_image"][0].path = result.secure_url;
+          }
+          if (req.files["login_image"] && req.files["login_image"][0]) {
+            const result = await uploadBufferForSettingsCloudinary(
+              req.files["login_image"][0].buffer
+            );
+            req.files["login_image"][0].path = result.secure_url;
+          }
+        }
+        next();
+      } catch (uploadError) {
+        return res
+          .status(500)
+          .json({ error: "Erro ao transferir capa/login para o servidor" });
+      }
+    });
+  };
+}
+
+function handleMulterError(err, res) {
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res
+        .status(400)
+        .json({ error: `Ficheiro gigante. Máximo: ${MAX_SIZE_MB}MB` });
+    }
+    return res
+      .status(400)
+      .json({ error: "Ocorreu um erro ao processar o ficheiro." });
+  }
+  return res.status(400).json({
+    error: "Ocorreu um erro. Verifica o formato e tenta novamente.",
+  });
 }
 
 module.exports = { uploadSingle, uploadArray, uploadSettingsImages };
