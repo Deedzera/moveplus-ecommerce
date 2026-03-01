@@ -88,7 +88,7 @@ const API = {
    */
   async getProducts(filters = {}) {
     try {
-      const url = new URL(`${API_BASE_URL}/products`);
+      const url = new URL(`${API_BASE_URL}/products`, window.location.origin);
       if (filters.category) url.searchParams.append("category", filters.category);
       if (filters.search) url.searchParams.append("search", filters.search);
       if (filters.status) url.searchParams.append("status", filters.status);
