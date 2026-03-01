@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { pool } = require("../server");
+const { pool } = require("../config/db");
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_super_secret_move_key";
 
