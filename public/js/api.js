@@ -138,21 +138,27 @@ const API = {
    * Tenta fazer login com email + password (retorna requires_otp: true)
    * @param {string} email
    * @param {string} password
-   * @returns {Promise<Object>}
+   * @param {boolean} rememberMe
+   * @returns {Promise<Object>} Resposta do server
    */
-  async login(email, password) {
-    const response = await fetch(`${API_BASE_URL}/customers/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      body: JSON.stringify({ email, password })
-    });
-    const data = await response.json();
+  async login(email, password, rememberMe = false) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/customers/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ email, password, rememberMe })
+      });
+      const data = await response.json();
     if (!response.ok) {
       throw new Error(data.error || "Erro no login");
     }
     // O backend agora trata dos cookies, não precisamos de guardar no localStorage
     return data;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   },
 
   /**

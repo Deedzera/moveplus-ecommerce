@@ -1441,6 +1441,9 @@
           const emailInput = document.getElementById("loginEmail");
           const email = emailInput.value.trim();
           const pass = document.getElementById("loginPassword").value;
+          const remember = document.getElementById("rememberMe")
+            ? document.getElementById("rememberMe").checked
+            : false;
           const loginEmailErr = document.getElementById("loginEmailError");
 
           // Limpar erros anteriores
@@ -1466,8 +1469,8 @@
           btn.disabled = true;
 
           try {
-            // 1. Enviar email + password → servidor valida
-            const res = await API.login(email, pass);
+            // 1. Enviar email + password + remember → servidor valida
+            const res = await API.login(email, pass, remember);
 
             btn.innerHTML =
               '<i class="fa-solid fa-right-to-bracket"></i> Entrar na Conta';
@@ -1486,7 +1489,7 @@
             } else if (res.requires_otp) {
               // 2. Abrir modal OTP para validar 2FA
               showToast("Verifica o teu email para o código OTP.", "success");
-              openOtpModal(res.email || email);
+              openOtpModal(res.email || email, res.rememberMe);
             }
           } catch (err) {
             btn.innerHTML =
@@ -1604,9 +1607,11 @@
       const otpModal = document.getElementById("otpModal");
       const otpInputs = document.querySelectorAll(".otp-input");
       let currentOtpEmail = null;
+      let currentRememberMe = false;
 
-      function openOtpModal(email) {
+      function openOtpModal(email, rememberMeFlag = false) {
         currentOtpEmail = email;
+        currentRememberMe = rememberMeFlag;
         document.getElementById("otpEmailLabel").textContent = email;
         otpModal.classList.add("show");
         otpInputs[0].focus();
@@ -1651,12 +1656,14 @@
           btn.disabled = true;
 
           try {
-            const res = await API.verifyOTP({
-              email: currentOtpEmail,
-              otp: otpCode,
-            });
+            // Verifica o OTP (novo param: rememberMe)
+            const res = await API.verifyOTP(
+              currentOtpEmail,
+              otpCode,
+              currentRememberMe,
+            );
 
-            // Guardar utilizador no localStorage
+            // Guardar no localstorage
             localStorage.setItem(
               "move_logged_user",
               JSON.stringify(res.customer),

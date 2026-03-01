@@ -173,7 +173,7 @@ router.post("/", async (req, res) => {
 // ══════════════════════════════════════════
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
@@ -245,23 +245,26 @@ router.post("/login", async (req, res) => {
       );
       const newSV = svResult.rows[0].session_version;
 
+      const tokenDuration = rememberMe ? "30d" : "1d";
+      const cookieMaxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+
       const token = jwt.sign(
         { id: freshCustomer.id, email: freshCustomer.email, role: freshCustomer.role, sv: newSV },
         JWT_SECRET,
-        { expiresIn: "7d" }
+        { expiresIn: tokenDuration }
       );
 
       res.cookie("move_auth_token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        maxAge: cookieMaxAge
       });
       res.cookie("is_logged_in", "1", {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000
+        maxAge: cookieMaxAge
       });
 
       return res.json({
@@ -292,7 +295,8 @@ router.post("/login", async (req, res) => {
       message: "Palavra-passe correcta. Verifica o teu email para o código OTP.",
       requires_otp: true,
       email: customer.email,
-      risk_reason: trustCheck.reason
+      risk_reason: trustCheck.reason,
+      rememberMe: rememberMe
     });
   } catch (err) {
     console.error("Erro no login:", err.message);
@@ -305,7 +309,7 @@ router.post("/login", async (req, res) => {
 // ══════════════════════════════════════════
 router.post("/verify-otp", async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const { email, otp, rememberMe } = req.body;
 
     if (!email || !otp) {
       return res.status(400).json({ error: "Email e OTP são obrigatórios" });
@@ -345,23 +349,26 @@ router.post("/verify-otp", async (req, res) => {
     const updated = await pool.query(updateQ, [customer.id]);
     const finalCustomer = updated.rows[0];
 
+    const tokenDuration = rememberMe ? "30d" : "1d";
+    const cookieMaxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+
     const token = jwt.sign(
       { id: finalCustomer.id, email: finalCustomer.email, role: finalCustomer.role, sv: finalCustomer.session_version },
       JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: tokenDuration }
     );
 
     res.cookie("move_auth_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      maxAge: cookieMaxAge
     });
     res.cookie("is_logged_in", "1", {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      maxAge: cookieMaxAge
     });
 
     res.json({
