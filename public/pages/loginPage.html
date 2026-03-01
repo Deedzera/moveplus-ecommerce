@@ -1768,7 +1768,7 @@
         .getElementById("forgotPwdRequestBtn")
         .addEventListener("click", async function () {
           const email = forgotPwdEmailInput.value.trim();
-          if (!email || !/\\S+@\\S+\\.\\S+/.test(email)) {
+          if (!email || !/\S+@\S+\.\S+/.test(email)) {
             showToast("Introduz um email válido.", "error");
             return;
           }
