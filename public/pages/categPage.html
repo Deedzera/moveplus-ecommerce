@@ -243,9 +243,10 @@
     </main>
 
     <!-- ======== FOOTER ======== -->
-    <footer class="footer" id="footer" style="margin-top: 80px">
+    <footer class="footer" id="footer">
       <div class="container">
         <div class="footer__grid">
+          <!-- Brand -->
           <div>
             <div class="footer__brand-name" id="gBrandName">
               Move <span>Plus</span>
@@ -286,54 +287,63 @@
               ></a>
             </div>
           </div>
+
+          <!-- Links Rápidos -->
           <div>
             <h4 class="footer__col-title">Loja</h4>
-            <a href="categPage.html?cat=perfumes" class="footer__link"
+            <a href="pages/categPage.html?cat=perfumes" class="footer__link"
               >Perfumes</a
             >
-            <a href="categPage.html?cat=cremes" class="footer__link">Cremes</a>
-            <a href="categPage.html?cat=roupa" class="footer__link">Roupa</a>
-            <a href="categPage.html?cat=acessorios" class="footer__link"
+            <a href="pages/categPage.html?cat=cremes" class="footer__link"
+              >Cremes</a
+            >
+            <a href="pages/categPage.html?cat=roupa" class="footer__link"
+              >Roupa</a
+            >
+            <a href="pages/categPage.html?cat=acessorios" class="footer__link"
               >Acessórios</a
             >
-            <a href="categPage.html?cat=promocoes" class="footer__link"
+            <a href="pages/categPage.html?cat=promocoes" class="footer__link"
               >Promoções</a
             >
           </div>
-          <!-- Ajuda <div>
+
+          <!-- Ajuda 
+          <div>
             <h4 class="footer__col-title">Ajuda</h4>
             <a href="#" class="footer__link">Como Comprar</a>
             <a href="#" class="footer__link">Entregas</a>
             <a href="#" class="footer__link">Trocas e Devoluções</a>
             <a href="#" class="footer__link">Perguntas Frequentes</a>
           </div>-->
+
+          <!-- Contacto -->
           <div>
             <h4 class="footer__col-title">Contacto</h4>
-            <a
-              href="https://wa.me/244999999999"
-              target="_blank"
-              class="footer__link"
+            <a href="#" target="_blank" class="footer__link" id="gLinkWhatsapp"
               ><i
                 class="fa-brands fa-whatsapp"
                 style="margin-right: 6px; color: var(--whatsapp)"
               ></i>
-              +244 999 999 999</a
+              <span id="gTextWhatsapp">+244 999 999 999</span></a
             >
-            <a href="mailto:info@moveplus.ao" class="footer__link"
+            <a href="#" class="footer__link" id="gLinkEmail"
               ><i class="fa-solid fa-envelope" style="margin-right: 6px"></i>
-              info@moveplus.ao</a
+              <span id="gTextEmail">info@moveplus.ao</span></a
             >
             <a href="#" class="footer__link"
               ><i
                 class="fa-solid fa-location-dot"
                 style="margin-right: 6px"
               ></i>
-              Luanda, Angola</a
+              <span id="gTextLocation">Luanda, Angola</span></a
             >
           </div>
         </div>
+
         <div class="footer__bottom">
           <span>© 2026 Move Plus. Todos os direitos reservados.</span>
+          
         </div>
       </div>
     </footer>

@@ -11,6 +11,8 @@ const { createProduct, updateProduct } = require("../controllers/productsControl
 // GET /api/products — Listar todos (com filtros opcionais)
 router.get("/", async (req, res) => {
   try {
+    // Vercel Cache Bypass - always fetch fresh products
+    res.setHeader("Cache-Control", "no-store, max-age=0");
     const { category, search, status } = req.query;
     let query = `
       SELECT p.*, c.name AS category_name,
