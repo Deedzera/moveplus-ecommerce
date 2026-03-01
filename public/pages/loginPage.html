@@ -1658,11 +1658,11 @@
 
           try {
             // Verifica o OTP (novo param: rememberMe)
-            const res = await API.verifyOTP(
-              currentOtpEmail,
-              otpCode,
-              currentRememberMe,
-            );
+            const res = await API.verifyOTP({
+              email: currentOtpEmail,
+              otp: otpCode,
+              rememberMe: currentRememberMe,
+            });
 
             // Guardar no localstorage
             localStorage.setItem(
