@@ -2,7 +2,10 @@
    MOVE PLUS — JS API Integrations
    ============================================ */
 
-const API_BASE_URL = "http://localhost:3000/api";
+// Use relative path for production (Vercel) to avoid connection refused errors
+const API_BASE_URL = window.location.hostname === 'localhost' 
+  ? "http://localhost:3000/api" 
+  : "/api";
 
 const API = {
   getToken() {
