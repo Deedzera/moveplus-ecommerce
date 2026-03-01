@@ -320,7 +320,7 @@
           /^\/produto\/([^\/]+)$/,
         );
         const params = new URLSearchParams(window.location.search);
-        const productSlug = pathMatch ? pathMatch[1] : null;
+        const productSlug = pathMatch ? pathMatch[1] : params.get("slug");
         const productId = params.get("id");
 
         if (!productSlug && !productId) {
