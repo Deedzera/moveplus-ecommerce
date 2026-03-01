@@ -94,9 +94,10 @@ function uploadSingle(fieldName) {
         req.file.path = result.secure_url; // Simulando comportamento do storage original
         next();
       } catch (uploadError) {
+        console.error("Cloudinary Single Error:", uploadError);
         return res
           .status(500)
-          .json({ error: "Erro ao fazer upload para o Cloudinary" });
+          .json({ error: "Erro ao fazer upload para o Cloudinary: " + (uploadError.message || JSON.stringify(uploadError)) });
       }
     });
   };
@@ -122,10 +123,10 @@ function uploadArray(fieldName, maxCount = 10) {
         await Promise.all(uploadPromises);
         next();
       } catch (uploadError) {
-        console.error(uploadError);
+        console.error("Cloudinary Array Error:", uploadError);
         return res
           .status(500)
-          .json({ error: "Erro ao transferir ficheiros para o servidor." });
+          .json({ error: "Erro ao transferir ficheiros para o Cloudinary: " + (uploadError.message || JSON.stringify(uploadError)) });
       }
     });
   };
@@ -156,9 +157,10 @@ function uploadSettingsImages() {
         }
         next();
       } catch (uploadError) {
+        console.error("Cloudinary Settings Error:", uploadError);
         return res
           .status(500)
-          .json({ error: "Erro ao transferir capa/login para o servidor" });
+          .json({ error: "Erro ao transferir imagens para o Cloudinary: " + (uploadError.message || JSON.stringify(uploadError)) });
       }
     });
   };
