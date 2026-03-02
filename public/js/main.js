@@ -361,12 +361,11 @@ function whatsappCheckout(productName, price, variation, quantity) {
   const phone = window.GLOBAL_WHATSAPP || "244999999999";
   const message = encodeURIComponent(
     `Olá! Gostaria de encomendar:\n` +
-      `----------------------------------\n` +
       `🛍️ Produto: ${productName}\n` +
       `💰 Preço: ${price}\n` +
       `📦 Variação: ${variation || "Padrão"}\n` +
       `🔢 Quantidade: ${quantity || 1}\n` +
-      `----------------------------------\n\n` +
+      `----------------------------------\n` +
       `Podem confirmar a disponibilidade?`,
   );
 

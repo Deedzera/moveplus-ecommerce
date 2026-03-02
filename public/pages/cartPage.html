@@ -589,14 +589,13 @@
             // Rebuild items text with the new format (with separators)
             let itemsMessage = "Olá! Gostaria de encomendar:\n";
             cartProducts.forEach((p) => {
-              itemsMessage += `----------------------------------\n`;
               itemsMessage += `🛍️ Produto: ${p.name}\n`;
               itemsMessage += `💰 Preço: ${API.formatPrice(p.price)}\n`;
               itemsMessage += `📦 Variação: ${p.variation || "Padrão"}\n`;
               itemsMessage += `🔢 Quantidade: ${p.cartQuantity || 1}\n`;
             });
-            itemsMessage += `----------------------------------\n\n`;
-            itemsMessage += `💰 Total Final: ${API.formatPrice(data.total)}\n`;
+            itemsMessage += `----------------------------------\n`;
+            itemsMessage += `💰Total Final: ${API.formatPrice(data.total)}\n`;
             itemsMessage += `Podem confirmar a disponibilidade?`;
 
             const waText = encodeURIComponent(itemsMessage);
