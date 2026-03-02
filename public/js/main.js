@@ -25,8 +25,7 @@ async function injectAdminIcon() {
       const actionsDiv = document.querySelector('.navbar__actions');
       if (!actionsDiv) return;
       
-      const isRoot = !window.location.pathname.includes("/pages/");
-      const link = isRoot ? "pages/adminPage.html" : "adminPage.html";
+      const link = "/pages/adminPage.html";
       
       const adminBtn = document.createElement("a");
       adminBtn.href = link;
@@ -56,11 +55,8 @@ async function initNavbarCategories() {
   try {
     const categories = await API.getCategories();
     if (categories && categories.length > 0) {
-      const isRoot = !window.location.pathname.includes("/pages/");
-      const pagesPrefix = isRoot ? "pages/" : "";
-      
       navMenu.innerHTML = categories.map(cat => {
-        return `<li><a href="${pagesPrefix}categPage.html?cat=${cat.slug}" class="navbar__link">${cat.name}</a></li>`;
+        return `<li><a href="/pages/categPage.html?cat=${cat.slug}" class="navbar__link">${cat.name}</a></li>`;
       }).join("");
     } else {
       navMenu.innerHTML = "";
@@ -173,10 +169,8 @@ function initMobileMenu() {
   const navLinks = document.querySelectorAll(".navbar__nav .navbar__link");
   const actionIcons = document.querySelectorAll(".navbar__actions .navbar__icon");
 
-  // Determine path prefix (index vs pages/)
-  const isRoot = !window.location.pathname.includes("/pages/");
-  const prefix = isRoot ? "pages/" : "";
-  const homeHref = isRoot ? "index.html" : "../index.html";
+  // Use absolute paths instead of prefix
+  const homeHref = "/";
 
   // Create overlay
   const overlay = document.createElement("div");
@@ -498,9 +492,6 @@ function initSearchAutocomplete() {
           resultsBox.innerHTML = "";
 
           if (products && products.length > 0) {
-            const isRoot = !window.location.pathname.includes("/pages/");
-            const pagesPrefix = isRoot ? "pages/" : "";
-
             // Show up to 5 results
             const topResults = products.slice(0, 5);
             
@@ -508,7 +499,7 @@ function initSearchAutocomplete() {
               const item = document.createElement("div");
               item.className = "search-autocomplete-item";
               
-              const imgUrl = p.images && p.images[0] ? p.images[0].image_url : (isRoot ? 'assets/placeholder.jpg' : '../assets/placeholder.jpg');
+              const imgUrl = p.images && p.images[0] ? p.images[0].image_url : '/assets/placeholder.jpg';
               const priceFmt = (p.price || 0).toLocaleString("pt-PT") + " Kz";
 
               item.innerHTML = `
@@ -520,7 +511,7 @@ function initSearchAutocomplete() {
               `;
 
               item.addEventListener("click", () => {
-                window.location.href = `${pagesPrefix}productPage.html?slug=${p.slug}`;
+                window.location.href = `/produto/${p.slug}`;
               });
 
               resultsBox.appendChild(item);
@@ -535,7 +526,7 @@ function initSearchAutocomplete() {
                viewAll.style.fontWeight = "600";
                viewAll.innerHTML = `Ver todos (${products.length})`;
                viewAll.addEventListener("click", () => {
-                 window.location.href = `${pagesPrefix}categPage.html?search=${encodeURIComponent(query)}`;
+                 window.location.href = `/pages/categPage.html?search=${encodeURIComponent(query)}`;
                });
                resultsBox.appendChild(viewAll);
             }
@@ -569,9 +560,7 @@ function initSearchAutocomplete() {
        if (e.key === "Enter") {
          const query = e.target.value.trim();
          if (query) {
-            const isRoot = !window.location.pathname.includes("/pages/");
-            const pagesPrefix = isRoot ? "pages/" : "";
-            window.location.href = `${pagesPrefix}categPage.html?search=${encodeURIComponent(query)}`;
+            window.location.href = `/pages/categPage.html?search=${encodeURIComponent(query)}`;
          }
        }
     });

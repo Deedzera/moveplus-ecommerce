@@ -36,8 +36,7 @@ const API = {
             showToast("Sessão terminada: fizeste login noutro dispositivo.", "error");
           }
           setTimeout(() => {
-            const isInPages = window.location.pathname.includes("/pages/");
-            safeRedirect(isInPages ? "loginPage.html" : "pages/loginPage.html");
+            safeRedirect("/pages/loginPage.html");
           }, 1500);
           return null;
         }
@@ -448,7 +447,7 @@ const API = {
     const linkPrefix = opts.linkPrefix != null ? opts.linkPrefix : "";
     const productHref = product.slug
       ? `${linkPrefix}/produto/${product.slug}`
-      : `${linkPrefix}pages/productPage.html?id=${product.id}`;
+      : `${linkPrefix}/pages/productPage.html?id=${product.id}`;
 
     return `
       <a href="${productHref}" class="product-card" ${isOutOfStock ? 'style="opacity:0.7;"' : ''}>
@@ -487,7 +486,7 @@ const API = {
     const imageUrl = category.image_url || "https://images.unsplash.com/photo-1541643600914-78b084683601?w=600&q=80";
     
     return `
-      <a href="pages/categPage.html?cat=${category.slug}" class="category-card">
+      <a href="/pages/categPage.html?cat=${category.slug}" class="category-card">
         <img
           src="${imageUrl}"
           alt="${category.name}"
