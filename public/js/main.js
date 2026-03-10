@@ -55,6 +55,9 @@ async function initNavbarCategories() {
   try {
     const categories = await API.getCategories();
     if (categories && categories.length > 0) {
+      // Sort categories alphabetically by name
+      categories.sort((a, b) => a.name.localeCompare(b.name, 'pt-PT'));
+      
       if (categories.length > 4) {
         const visibleCats = categories.slice(0, 4);
         const hiddenCats = categories.slice(4);

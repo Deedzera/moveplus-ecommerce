@@ -230,6 +230,7 @@ button {
   padding: 6px 0;
   letter-spacing: 0.3px;
   transition: color 0.3s ease;
+  white-space: nowrap;
 }
 
 .navbar__link::after {
