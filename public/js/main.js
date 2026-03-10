@@ -55,9 +55,30 @@ async function initNavbarCategories() {
   try {
     const categories = await API.getCategories();
     if (categories && categories.length > 0) {
-      navMenu.innerHTML = categories.map(cat => {
-        return `<li><a href="/pages/categPage.html?cat=${cat.slug}" class="navbar__link">${cat.name}</a></li>`;
-      }).join("");
+      if (categories.length > 4) {
+        const visibleCats = categories.slice(0, 4);
+        const hiddenCats = categories.slice(4);
+        
+        let html = visibleCats.map(cat => {
+          return `<li><a href="/pages/categPage.html?cat=${cat.slug}" class="navbar__link">${cat.name}</a></li>`;
+        }).join("");
+
+        html += `
+          <li class="navbar__dropdown">
+            <a href="#" class="navbar__link navbar__link--more">Ver Mais <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem;"></i></a>
+            <ul class="navbar__dropdown-menu">
+              ${hiddenCats.map(cat => {
+                return `<li><a href="/pages/categPage.html?cat=${cat.slug}" class="navbar__dropdown-link">${cat.name}</a></li>`;
+              }).join("")}
+            </ul>
+          </li>
+        `;
+        navMenu.innerHTML = html;
+      } else {
+        navMenu.innerHTML = categories.map(cat => {
+          return `<li><a href="/pages/categPage.html?cat=${cat.slug}" class="navbar__link">${cat.name}</a></li>`;
+        }).join("");
+      }
     } else {
       navMenu.innerHTML = "";
     }
