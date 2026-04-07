@@ -208,6 +208,7 @@
           <p class="section__subtitle">
             Os mais procurados — qualidade garantida, preços acessíveis.
           </p>
+          <div id="productsCount" class="products-count fade-in" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;"></div>
         </div>
 
         <div class="products-grid fade-in" id="featuredProductsGrid">
@@ -341,144 +342,103 @@
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
 
+    <script src="js/pagination.js"></script>
     <script>
-      // Load Dynamic Data on Index
-      document.addEventListener("DOMContentLoaded", async () => {
-        // Load user's favorite IDs (empty if not logged in)
-        const favoriteIds = await API.getFavoriteIds();
+      /**
+       * Featured Products Manager
+       * Uses the Pagination component for clean, consistent results.
+       */
+      class FeaturedProductsUI {
+        constructor() {
+          this.grid = document.getElementById("featuredProductsGrid");
+          this.countElem = document.getElementById("productsCount");
+          
+          this.pagination = new Pagination({
+            containerId: "pagination",
+            itemsPerPage: 12,
+            scrollToId: "produtos",
+            onPageChange: async (state) => this.render(state)
+          });
 
-        // 1. Load Categories
-        const catGrid = document.getElementById("categoriesGrid");
-        try {
-          const categories = await API.getCategories();
-          if (categories && categories.length > 0) {
-            catGrid.innerHTML = categories
-              .map((c) => API.renderCategoryCard(c))
-              .join("");
-          } else {
-            catGrid.innerHTML =
-              "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhuma categoria encontrada.</div>";
-          }
-        } catch (err) {
-          catGrid.innerHTML =
-            "<div style='grid-column: 1 / -1; text-align: center; color: red;'>Falha ao carregar categorias.</div>";
+          this.init();
         }
 
-        // 2. Load Featured Products with Pagination & Random Sort
-        const prodGrid = document.getElementById("featuredProductsGrid");
-        const paginationContainer = document.getElementById("pagination");
-        
-        let allProducts = [];
-        let itemsPerPage = 15;
-        let currentPage = 1;
-
-        async function initFeaturedProducts() {
+        async init() {
           try {
-            // Fetch all active products
-            allProducts = await API.getProducts({ status: "ativo" });
+            // Load all active products once
+            const products = await API.getProducts({ status: "ativo" });
             
-            if (allProducts && allProducts.length > 0) {
-              // Random shuffle on each reload
-              shuffleArray(allProducts);
-              renderPage(1);
+            if (products && products.length > 0) {
+              this.shuffleArray(products);
+              this.pagination.setItems(products);
             } else {
-              prodGrid.innerHTML = 
-                "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhum produto encontrado.</div>";
+              this.renderEmptyState();
             }
           } catch (err) {
-            console.error(err);
-            prodGrid.innerHTML = 
-              "<div style='grid-column: 1 / -1; text-align: center; color: red;'>Falha ao carregar produtos.</div>";
+            console.error("Error loading products:", err);
+            this.renderErrorState();
           }
         }
 
-        function shuffleArray(array) {
+        shuffleArray(array) {
           for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
           }
         }
 
-        async function renderPage(page) {
-          currentPage = page;
-          const start = (currentPage - 1) * itemsPerPage;
-          const end = start + itemsPerPage;
-          const paginatedItems = allProducts.slice(start, end);
+        async render(state) {
+          // Fetch fresh favorites to ensure heart icons are accurate
+          const favoriteIds = await API.getFavoriteIds();
 
-          // Get favorites once if not already fetched
-          if (!window._favoriteIds) {
-            window._favoriteIds = await API.getFavoriteIds();
-          }
-
-          prodGrid.innerHTML = paginatedItems
-            .map((p) => API.renderProductCard(p, window._favoriteIds))
+          // Update Grid
+          this.grid.innerHTML = state.items
+            .map((p) => API.renderProductCard(p, favoriteIds))
             .join("");
 
-          renderPagination();
-          
-          // Smooth scroll to top of section on page change
-          if (page > 1) {
-            const section = document.getElementById("produtos");
-            const navHeight = document.getElementById("navbar").offsetHeight;
-            window.scrollTo({
-              top: section.offsetTop - navHeight - 20,
-              behavior: "smooth"
-            });
+          // Update Info text
+          if (this.countElem) {
+            this.countElem.textContent = `Mostrando ${state.startRange}-${state.endRange} de ${state.totalItems} produtos`;
           }
         }
 
-        function renderPagination() {
-          const totalPages = Math.ceil(allProducts.length / itemsPerPage);
-          if (totalPages <= 1) {
-            paginationContainer.innerHTML = "";
-            return;
-          }
-
-          let html = "";
-          
-          // Prev Button
-          html += `<button class="pagination__btn" ${currentPage === 1 ? "disabled" : ""} onclick="window.changePage(${currentPage - 1})">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>`;
-
-          // Logic for numerical buttons
-          const maxVisiblePages = 5;
-          let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-          let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-          
-          if (endPage - startPage + 1 < maxVisiblePages) {
-            startPage = Math.max(1, endPage - maxVisiblePages + 1);
-          }
-
-          if (startPage > 1) {
-            html += `<button class="pagination__btn" onclick="window.changePage(1)">1</button>`;
-            if (startPage > 2) html += `<span class="pagination__info">...</span>`;
-          }
-
-          for (let i = startPage; i <= endPage; i++) {
-            html += `<button class="pagination__btn ${i === currentPage ? "pagination__btn--active" : ""}" onclick="window.changePage(${i})">${i}</button>`;
-          }
-
-          if (endPage < totalPages) {
-            if (endPage < totalPages - 1) html += `<span class="pagination__info">...</span>`;
-            html += `<button class="pagination__btn" onclick="window.changePage(${totalPages})">${totalPages}</button>`;
-          }
-
-          // Next Button
-          html += `<button class="pagination__btn" ${currentPage === totalPages ? "disabled" : ""} onclick="window.changePage(${currentPage + 1})">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>`;
-
-          paginationContainer.innerHTML = html;
+        renderEmptyState() {
+          this.grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-muted);">
+              <i class="fa-solid fa-box-open" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+              <p>Nenhum produto em destaque no momento.</p>
+            </div>
+          `;
         }
 
-        // Global function for onclick
-        window.changePage = (page) => {
-          renderPage(page);
-        };
+        renderErrorState() {
+          this.grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--danger);">
+              <i class="fa-solid fa-circle-exclamation" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+              <p>Falha ao carregar os produtos. Por favor, tente novamente.</p>
+              <button onclick="location.reload()" class="btn btn--outline" style="margin-top: 1rem;">Tentar Novamente</button>
+            </div>
+          `;
+        }
+      }
 
-        // Start initialization
-        initFeaturedProducts();
+      // Initialize on Load
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Load Categories
+        const catGrid = document.getElementById("categoriesGrid");
+        try {
+          const categories = await API.getCategories();
+          if (categories && categories.length > 0) {
+            catGrid.innerHTML = categories.map((c) => API.renderCategoryCard(c)).join("");
+          } else {
+            catGrid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhuma categoria encontrada.</div>";
+          }
+        } catch (err) {
+          catGrid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center; color: var(--danger);'>Falha ao carregar categorias.</div>";
+        }
+
+        // Feature Products Manager
+        new FeaturedProductsUI();
       });
     </script>
     <!-- Cookie Consent -->

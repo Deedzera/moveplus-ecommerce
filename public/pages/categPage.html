@@ -259,12 +259,13 @@
 
             <!-- Product Grid -->
             <div class="products-grid fade-in" id="categoryProductsGrid">
-              <div
-                style="grid-column: 1 / -1; text-align: center; padding: 2rem"
-              >
+              <div style="grid-column: 1 / -1; text-align: center; padding: 2rem">
                 A carregar produtos...
               </div>
             </div>
+
+            <!-- Pagination Container -->
+            <div id="pagination" class="pagination fade-in"></div>
           </div>
         </div>
       </div>
@@ -389,6 +390,7 @@
     <script src="../js/safeRedirect.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/pagination.js"></script>
     <script>
       // ---- Category page JS ----
       // Price range label
@@ -440,6 +442,14 @@
       let allProducts = [];
       let _favIds = [];
 
+      // Initialize Pagination instance
+      const pagination = new Pagination({
+        containerId: "pagination",
+        itemsPerPage: 12,
+        scrollToId: "navbar", // Scroll to navbar when changing page
+        onPageChange: async (state) => renderProducts(state)
+      });
+
       async function initCategoryPage() {
         // Load user favorite IDs
         _favIds = await API.getFavoriteIds();
@@ -465,7 +475,6 @@
           apiFilters.category = catSlug;
         }
 
-        const prodGrid = document.getElementById("categoryProductsGrid");
         try {
           allProducts = await API.getProducts(apiFilters);
 
@@ -477,14 +486,13 @@
           filterAndRenderProducts();
         } catch (err) {
           console.error(err);
+          const prodGrid = document.getElementById("categoryProductsGrid");
           prodGrid.innerHTML =
             "<div style='grid-column: 1 / -1; text-align: center; color: red;'>Falha ao carregar produtos.</div>";
         }
       }
 
       function filterAndRenderProducts() {
-        const prodGrid = document.getElementById("categoryProductsGrid");
-
         // 1. Obter valores
         const activeGenders = Array.from(
           document.querySelectorAll('input[name="filter_gender"]:checked'),
@@ -538,17 +546,24 @@
           );
         }
 
-        // 4. Renderizar
-        document.querySelector(".listing__count").innerHTML =
-          `A mostrar <strong>${filteredList.length}</strong> produtos`;
+        // 4. Set items to pagination (which handles rendering Page 1)
+        pagination.setItems(filteredList);
+      }
 
-        if (filteredList.length > 0) {
-          prodGrid.innerHTML = filteredList
-            .map((p) => API.renderProductCard(p, _favIds, { linkPrefix: "" }))
+      async function renderProducts(state) {
+        const prodGrid = document.getElementById("categoryProductsGrid");
+        _favIds = await API.getFavoriteIds(); // ensure fresh favs
+
+        document.querySelector(".listing__count").innerHTML =
+          `A mostrar <strong>${state.startRange}-${state.endRange}</strong> de <strong>${state.totalItems}</strong> produtos`;
+
+        if (state.items.length > 0) {
+          prodGrid.innerHTML = state.items
+            .map((p) => API.renderProductCard(p, _favIds, { linkPrefix: ".." }))
             .join("");
         } else {
           prodGrid.innerHTML =
-            "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhum produto encontrado neste intervalo de preço e filtros.</div>";
+            "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhum produto encontrado.</div>";
         }
       }
 
