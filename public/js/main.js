@@ -217,6 +217,9 @@ function initMobileMenu() {
       <div class="mobile-drawer__section">Navegação</div>
       <a href="${homeHref}" class="mobile-drawer__link">
         <i class="fa-solid fa-house"></i> Início
+      </a>
+      <a href="/pages/aboutPage.html" class="mobile-drawer__link">
+        <i class="fa-solid fa-circle-info"></i> Sobre Nós
       </a>`;
 
   // Nav links

@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Conheça a Move Plus — A sua loja online de confiança em Angola. Qualidade, originalidade e entrega rápida."
+    />
+    <title>Sobre Nós — Move Plus</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://moveplus.ao/pages/aboutPage.html" />
+    <meta property="og:title" content="Sobre Nós — Move Plus" />
+    <meta
+      property="og:description"
+      content="A nossa missão é elevar o seu padrão com os melhores perfumes, cremes e moda internacional."
+    />
+    <meta property="og:image" content="../assets/about_hero.png" />
+
+    <link rel="icon" href="/favicon.png" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      /* Page Specific Styles */
+      .about-hero {
+        position: relative;
+        height: 60vh;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        overflow: hidden;
+      }
+
+      .about-hero__bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        filter: brightness(0.4);
+      }
+
+      .about-hero__content h1 {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(to right, #fff, #ffd700);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .about-section {
+        padding: 100px 0;
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+
+      @media (max-width: 991px) {
+        .about-grid {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+      }
+
+      .about-image {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: var(--shadow-xl);
+      }
+
+      .about-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg, rgba(212, 175, 55, 0.2), transparent);
+      }
+
+      .about-image img {
+        width: 100%;
+        display: block;
+        transition: transform 0.6s ease;
+      }
+
+      .about-image:hover img {
+        transform: scale(1.05);
+      }
+
+      .stats-panel {
+        background: var(--surface-alt);
+        padding: 60px 0;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+        text-align: center;
+      }
+
+      .stat-item h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--gold);
+        margin-bottom: 5px;
+      }
+
+      .stat-item p {
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+      }
+
+      .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+      }
+
+      .value-card {
+        background: var(--surface);
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+      }
+
+      .value-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--gold);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .value-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+      }
+
+      .value-card h3 {
+        margin-bottom: 15px;
+        font-size: 1.4rem;
+      }
+
+      .value-card p {
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      .mission-section {
+        background: linear-gradient(135deg, var(--primary), #000);
+        color: white;
+        padding: 100px 0;
+        border-radius: 40px;
+        margin-bottom: 100px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mission-section::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+      }
+
+      .mission-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .mission-title {
+        color: var(--gold);
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        display: block;
+      }
+
+      .mission-text {
+        font-size: 1.8rem;
+        font-weight: 500;
+        line-height: 1.4;
+      }
+
+      @media (max-width: 768px) {
+        .mission-text {
+          font-size: 1.3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ======== NAVBAR ======== -->
+    <nav class="navbar" id="navbar">
+      <div class="container navbar__inner">
+        <a href="../index.html" class="navbar__logo">Move <span>Plus</span></a>
+
+        <ul class="navbar__nav" id="navMenu"></ul>
+
+        <div class="navbar__actions">
+          <div class="navbar__search">
+            <i class="fa-solid fa-magnifying-glass navbar__search-icon"></i>
+            <input type="text" placeholder="Pesquisar..." />
+          </div>
+
+          <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-sun"></i>
+          </button>
+
+          <a href="cartPage.html" class="navbar__icon" title="Carrinho">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="badge cart-badge" style="display: none">0</span>
+          </a>
+
+          <a href="userPage.html" class="navbar__icon" title="Perfil">
+            <i class="fa-solid fa-user"></i>
+          </a>
+
+          <div class="navbar__hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ======== ABOUT HERO ======== -->
+    <section class="about-hero">
+      <img src="../assets/about_hero.png" alt="Sobre Nós" class="about-hero__bg" />
+      <div class="container about-hero__content">
+        <h1 class="fade-in">Eleve o Seu Padrão</h1>
+        <p class="fade-in" style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; opacity: 0.9;">
+          Descubra a história por trás da Move Plus, a sua boutique de excelência em Angola.
+        </p>
+      </div>
+    </section>
+
+    <!-- ======== OUR STORY ======== -->
+    <section class="section about-section">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-image fade-in">
+            <img src="https://images.unsplash.com/photo-1541975040043-348f5fd350be?auto=format&fit=crop&q=80&w=1000" alt="Boutique" />
+          </div>
+          <div class="about-text fade-in">
+            <span class="mission-title" style="text-align: left;">A Nossa História</span>
+            <h2 class="section__title" style="text-align: left; margin-top: 10px;">Paixão pela Autenticidade e Estilo</h2>
+            <p style="margin-top: 20px; font-size: 1.1rem; line-height: 1.7; color: var(--text-muted);">
+              A Move Plus nasceu da vontade de trazer para o mercado angolano o que há de melhor no mundo da perfumaria, cosmética e moda. Mais do que uma loja online, somos curadores de experiências sensoriais e estilo de vida.
+            </p>
+            <p style="margin-top: 15px; font-size: 1.1rem; line-height: 1.7; color: var(--text-muted);">
+              Desde o primeiro dia, o nosso compromisso tem sido com a originalidade. Sabemos que o seu perfume é a sua marca, e a sua roupa é a sua expressão. Por isso, trabalhamos apenas com fornecedores oficiais e marcas de renome internacional.
+            </p>
+            <div style="margin-top: 30px;">
+              <a href="../index.html#produtos" class="btn btn--gold">Explorar Coleções</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== STATS ======== -->
+    <div class="stats-panel">
+      <div class="container stats-grid">
+        <div class="stat-item fade-in">
+          <h2>5k+</h2>
+          <p>Clientes Felizes</p>
+        </div>
+        <div class="stat-item fade-in">
+          <h2>100%</h2>
+          <p>Originais</p>
+        </div>
+        <div class="stat-item fade-in">
+          <h2>24h</h2>
+          <p>Média de Entrega</p>
+        </div>
+        <div class="stat-item fade-in">
+          <h2>50+</h2>
+          <p>Marcas Globais</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== OUR VALUES ======== -->
+    <section class="section">
+      <div class="container">
+        <div class="section__header fade-in">
+          <h2 class="section__title">Os Nossos Valores</h2>
+          <p class="section__subtitle">Pilar de sustentação do nosso serviço e da nossa relação consigo.</p>
+        </div>
+
+        <div class="values-grid">
+          <div class="value-card fade-in">
+            <div class="value-icon"><i class="fa-solid fa-gem"></i></div>
+            <h3>Qualidade Premium</h3>
+            <p>Não abrimos mão da excelência. Cada produto no nosso catálogo passa por uma verificação rigorosa de qualidade.</p>
+          </div>
+          <div class="value-card fade-in">
+            <div class="value-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <h3>Agilidade</h3>
+            <p>Sabemos que não gosta de esperar. O nosso sistema de logística em Luanda é optimizado para entregas recorde.</p>
+          </div>
+          <div class="value-card fade-in">
+            <div class="value-icon"><i class="fa-solid fa-handshake"></i></div>
+            <h3>Confiança</h3>
+            <p>Transparência em todo o processo, desde a encomenda à entrega, com suporte humano via WhatsApp sempre disponível.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== MISSION BANNER ======== -->
+    <section class="container fade-in">
+      <div class="mission-section">
+        <div class="mission-content">
+          <span class="mission-title">O Nosso Propósito</span>
+          <p class="mission-text">
+            "Capacitar cada indivíduo a sentir-se confiante, sofisticado e autêntico, através do acesso simplificado a produtos de luxo e moda contemporânea."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="footer" id="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <!-- Brand -->
+          <div>
+            <div class="footer__brand-name" id="gBrandName">
+              Move <span>Plus</span>
+            </div>
+            <p class="footer__brand-desc" id="gBrandSlogan">
+              A tua loja online de confiança. Perfumes, cremes, roupa e
+              acessórios — tudo ao melhor preço com entrega rápida.
+            </p>
+            <div class="footer__socials">
+              <a href="#" class="footer__social-icon" id="gImgInstagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" class="footer__social-icon" id="gImgFacebook" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="#" class="footer__social-icon" id="gImgTiktok" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+              <a href="#" target="_blank" class="footer__social-icon" id="gImgWhatsapp" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            </div>
+          </div>
+
+          <!-- Links Rápidos -->
+          <div>
+            <h4 class="footer__col-title">Loja</h4>
+            <a href="categPage.html?cat=perfumes" class="footer__link">Perfumes</a>
+            <a href="categPage.html?cat=cremes" class="footer__link">Cremes</a>
+            <a href="categPage.html?cat=roupa" class="footer__link">Roupa</a>
+            <a href="categPage.html?cat=acessorios" class="footer__link">Acessórios</a>
+            <a href="aboutPage.html" class="footer__link">Sobre Nós</a>
+          </div>
+
+          <!-- Contacto -->
+          <div>
+            <h4 class="footer__col-title">Contacto</h4>
+            <a href="#" target="_blank" class="footer__link" id="gLinkWhatsapp">
+              <i class="fa-brands fa-whatsapp" style="margin-right: 6px; color: var(--whatsapp)"></i>
+              <span id="gTextWhatsapp">+244 999 999 999</span>
+            </a>
+            <a href="#" class="footer__link" id="gLinkEmail">
+              <i class="fa-solid fa-envelope" style="margin-right: 6px"></i>
+              <span id="gTextEmail">info@moveplus.ao</span>
+            </a>
+            <a href="#" class="footer__link">
+              <i class="fa-solid fa-location-dot" style="margin-right: 6px"></i>
+              <span id="gTextLocation">Luanda, Angola</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer__bottom">
+          <span>© 2026 Move Plus. Todos os direitos reservados.</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ======== FLOATING WHATSAPP ======== -->
+    <a href="#" target="_blank" class="whatsapp-float" id="gFloatingWhatsapp" title="Contactar via WhatsApp">
+      <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <script src="../js/safeRedirect.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/cookieConsent.js"></script>
+  </body>
+</html>
