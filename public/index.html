@@ -208,7 +208,16 @@
           <p class="section__subtitle">
             Os mais procurados — qualidade garantida, preços acessíveis.
           </p>
-          <div id="productsCount" class="products-count fade-in" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); font-weight: 500;"></div>
+          <div
+            id="productsCount"
+            class="products-count fade-in"
+            style="
+              margin-top: 1rem;
+              font-size: 0.9rem;
+              color: var(--text-muted);
+              font-weight: 500;
+            "
+          ></div>
         </div>
 
         <div class="products-grid fade-in" id="featuredProductsGrid">
@@ -286,9 +295,7 @@
             <a href="pages/categPage.html?cat=promocoes" class="footer__link"
               >Promoções</a
             >
-            <a href="pages/aboutPage.html" class="footer__link"
-              >Sobre Nós</a
-            >
+            <a href="pages/aboutPage.html" class="footer__link">Sobre Nós</a>
           </div>
 
           <!-- Ajuda 
@@ -326,6 +333,19 @@
 
         <div class="footer__bottom">
           <span>© 2026 Move Plus. Todos os direitos reservados.</span>
+          <span style="opacity: 0.8"
+            >SITE DESENVOLVIDO PELA
+            <a
+              href="https://KUBODEV.site"
+              target="_blank"
+              style="
+                color: inherit;
+                text-decoration: underline;
+                font-weight: 600;
+              "
+              >KUBODEV</a
+            ></span
+          >
         </div>
       </div>
     </footer>
@@ -355,12 +375,12 @@
         constructor() {
           this.grid = document.getElementById("featuredProductsGrid");
           this.countElem = document.getElementById("productsCount");
-          
+
           this.pagination = new Pagination({
             containerId: "pagination",
             itemsPerPage: 12,
             scrollToId: "produtos",
-            onPageChange: async (state) => this.render(state)
+            onPageChange: async (state) => this.render(state),
           });
 
           this.init();
@@ -370,7 +390,7 @@
           try {
             // Load all active products once
             const products = await API.getProducts({ status: "ativo" });
-            
+
             if (products && products.length > 0) {
               this.shuffleArray(products);
               this.pagination.setItems(products);
@@ -432,12 +452,16 @@
         try {
           const categories = await API.getCategories();
           if (categories && categories.length > 0) {
-            catGrid.innerHTML = categories.map((c) => API.renderCategoryCard(c)).join("");
+            catGrid.innerHTML = categories
+              .map((c) => API.renderCategoryCard(c))
+              .join("");
           } else {
-            catGrid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhuma categoria encontrada.</div>";
+            catGrid.innerHTML =
+              "<div style='grid-column: 1 / -1; text-align: center; color: var(--text-light);'>Nenhuma categoria encontrada.</div>";
           }
         } catch (err) {
-          catGrid.innerHTML = "<div style='grid-column: 1 / -1; text-align: center; color: var(--danger);'>Falha ao carregar categorias.</div>";
+          catGrid.innerHTML =
+            "<div style='grid-column: 1 / -1; text-align: center; color: var(--danger);'>Falha ao carregar categorias.</div>";
         }
 
         // Feature Products Manager

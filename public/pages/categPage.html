@@ -259,7 +259,9 @@
 
             <!-- Product Grid -->
             <div class="products-grid fade-in" id="categoryProductsGrid">
-              <div style="grid-column: 1 / -1; text-align: center; padding: 2rem">
+              <div
+                style="grid-column: 1 / -1; text-align: center; padding: 2rem"
+              >
                 A carregar produtos...
               </div>
             </div>
@@ -323,21 +325,15 @@
             <a href="categPage.html?cat=perfumes" class="footer__link"
               >Perfumes</a
             >
-            <a href="categPage.html?cat=cremes" class="footer__link"
-              >Cremes</a
-            >
-            <a href="categPage.html?cat=roupa" class="footer__link"
-              >Roupa</a
-            >
+            <a href="categPage.html?cat=cremes" class="footer__link">Cremes</a>
+            <a href="categPage.html?cat=roupa" class="footer__link">Roupa</a>
             <a href="categPage.html?cat=acessorios" class="footer__link"
               >Acessórios</a
             >
             <a href="categPage.html?cat=promocoes" class="footer__link"
               >Promoções</a
             >
-            <a href="aboutPage.html" class="footer__link"
-              >Sobre Nós</a
-            >
+            <a href="aboutPage.html" class="footer__link">Sobre Nós</a>
           </div>
 
           <!-- Ajuda 
@@ -375,6 +371,19 @@
 
         <div class="footer__bottom">
           <span>© 2026 Move Plus. Todos os direitos reservados.</span>
+          <span style="opacity: 0.8"
+            >SITE DESENVOLVIDO PELA
+            <a
+              href="https://KUBODEV.site"
+              target="_blank"
+              style="
+                color: inherit;
+                text-decoration: underline;
+                font-weight: 600;
+              "
+              >KUBODEV</a
+            ></span
+          >
         </div>
       </div>
     </footer>
@@ -450,7 +459,7 @@
         containerId: "pagination",
         itemsPerPage: 12,
         scrollToId: "navbar", // Scroll to navbar when changing page
-        onPageChange: async (state) => renderProducts(state)
+        onPageChange: async (state) => renderProducts(state),
       });
 
       async function initCategoryPage() {
